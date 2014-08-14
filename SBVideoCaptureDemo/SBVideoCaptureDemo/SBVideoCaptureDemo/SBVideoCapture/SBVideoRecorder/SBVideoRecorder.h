@@ -31,9 +31,14 @@
 @property (strong, nonatomic) AVCaptureDevice *inputDevice;
 @property (strong, nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 
+- (CGFloat)getTotalVideoDuration;
 - (void)stopRecording;
 - (void)startRecordingToOutputFileURL:(NSURL *)fileURL;
-- (void)deleteLastVideo;
+
+- (void)deleteLastVideo;//调用delegate
+- (void)deleteAllVideo;//不调用delegate
+
 - (int)getVideoCount;
+
 
 @end

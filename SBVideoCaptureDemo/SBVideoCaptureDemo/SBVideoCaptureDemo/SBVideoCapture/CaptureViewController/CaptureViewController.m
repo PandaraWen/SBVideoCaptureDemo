@@ -15,6 +15,8 @@
 
 #define TIMER_INTERVAL 0.05f
 
+#define TAG_ALERTVIEW_CLOSE_CONTROLLER 10086
+
 @interface CaptureViewController ()
 
 @property (strong, nonatomic) UIView *maskView;
@@ -25,6 +27,10 @@
 
 @property (strong, nonatomic) DeleteButton *deleteButton;
 @property (strong, nonatomic) UIButton *okButton;
+
+@property (strong, nonatomic) UIButton *closeButton;
+@property (strong, nonatomic) UIButton *switchButton;
+@property (strong, nonatomic) UIButton *settingButton;
 
 @end
 
@@ -57,6 +63,7 @@
     [self initProgressBar];
     [self initDeleteButton];
     [self initOKButton];
+    [self initTopLayout];
     
     [self hideMaskView];
 }
@@ -104,6 +111,57 @@
     [self.view insertSubview:_okButton belowSubview:_maskView];
 }
 
+- (void)initTopLayout
+{
+    CGFloat buttonW = 35.0f;
+    
+    //关闭
+    self.closeButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 5, buttonW, buttonW)];
+    [_closeButton setImage:[UIImage imageNamed:@"record_close_normal.png"] forState:UIControlStateNormal];
+    [_closeButton setImage:[UIImage imageNamed:@"record_close_disable.png"] forState:UIControlStateDisabled];
+    [_closeButton setImage:[UIImage imageNamed:@"record_close_highlighted.png"] forState:UIControlStateSelected];
+    [_closeButton setImage:[UIImage imageNamed:@"record_close_highlighted.png"] forState:UIControlStateHighlighted];
+    [_closeButton addTarget:self action:@selector(pressCloseButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:_closeButton belowSubview:_maskView];
+    
+    //前后摄像头转换
+    self.switchButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10) * 2 - 10, 5, buttonW, buttonW)];
+    [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_normal.png"] forState:UIControlStateNormal];
+    [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_disable.png"] forState:UIControlStateDisabled];
+    [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateSelected];
+    [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateHighlighted];
+    [self.view insertSubview:_switchButton belowSubview:_maskView];
+    
+    //setting
+    self.settingButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10), 5, buttonW, buttonW)];
+    [_settingButton setImage:[UIImage imageNamed:@"record_tool_normal.png"] forState:UIControlStateNormal];
+    [_settingButton setImage:[UIImage imageNamed:@"record_tool_disable.png"] forState:UIControlStateDisabled];
+    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateSelected];
+    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateHighlighted];
+    [self.view insertSubview:_settingButton belowSubview:_maskView];
+}
+
+- (void)pressCloseButton
+{
+    if ([_recorder getTotalVideoDuration] > 0.0f) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提醒" message:@"放弃这个视频真的好么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"放弃", nil];
+        alertView.tag = TAG_ALERTVIEW_CLOSE_CONTROLLER;
+        [alertView show];
+    } else {
+        [self dropTheVideo];
+    }
+}
+
+- (void)pressSwitchButton
+{
+    
+}
+
+- (void)pressSettingButton
+{
+    
+}
+
 - (void)pressDeleteButton
 {
     if (_deleteButton.style == DeleteButtonStyleNormal) {//第一次按下删除按钮
@@ -124,6 +182,13 @@
 - (void)pressOKButton
 {
     _okButton.enabled = NO;
+}
+
+//放弃本次视频，并且关闭页面
+- (void)dropTheVideo
+{
+    [_recorder deleteAllVideo];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 //删除最后一段视频
@@ -254,6 +319,32 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [_recorder stopRecording];
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (alertView.tag) {
+        case TAG_ALERTVIEW_CLOSE_CONTROLLER:
+        {
+            switch (buttonIndex) {
+                case 0:
+                {
+                }
+                    break;
+                case 1:
+                {
+                    [self dropTheVideo];
+                }
+                default:
+                    break;
+            }
+        }
+            break;
+            
+        default:
+            break;
+    }
 }
 
 @end

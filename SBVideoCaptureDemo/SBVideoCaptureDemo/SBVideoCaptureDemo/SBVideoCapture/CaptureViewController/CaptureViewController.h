@@ -11,6 +11,6 @@
 #import "SBCaptureDefine.h"
 #import "SBVideoRecorder.h"
 
-@interface CaptureViewController : UIViewController <SBVideoRecorderDelegate>
+@interface CaptureViewController : UIViewController <SBVideoRecorderDelegate, UIAlertViewDelegate>
 
 @end

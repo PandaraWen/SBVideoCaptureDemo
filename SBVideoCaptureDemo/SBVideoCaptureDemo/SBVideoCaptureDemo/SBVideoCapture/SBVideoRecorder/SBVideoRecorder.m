@@ -102,6 +102,12 @@
 }
 
 #pragma mark - Method
+//总时长
+- (CGFloat)getTotalVideoDuration
+{
+    return _totalVideoDur;
+}
+
 //现在录了多少视频
 - (int)getVideoCount
 {
@@ -123,6 +129,28 @@
     [_movieFileOutput stopRecording];
 }
 
+//不调用delegate
+- (void)deleteAllVideo
+{
+    for (SBVideoData *data in _videoFileDataArray) {
+        NSURL *videoFileURL = data.fileURL;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSString *filePath = [[videoFileURL absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+            
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([fileManager fileExistsAtPath:filePath]) {
+                NSError *error = nil;
+                [fileManager removeItemAtPath:filePath error:&error];
+                
+                if (error) {
+                    NSLog(@"deleteAllVideo删除视频文件出错:%@", error);
+                }
+            }
+        });
+    }
+}
+
+//会调用delegate
 - (void)deleteLastVideo
 {
     if ([_videoFileDataArray count] == 0) {
