@@ -241,6 +241,12 @@
 #pragma mark - Touch Event
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (_deleteButton.style == DeleteButtonStyleDelete) {//取消删除
+        [_deleteButton setButtonStyle:DeleteButtonStyleNormal];
+        [_progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
+        return;
+    }
+    
     NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
     [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
 }

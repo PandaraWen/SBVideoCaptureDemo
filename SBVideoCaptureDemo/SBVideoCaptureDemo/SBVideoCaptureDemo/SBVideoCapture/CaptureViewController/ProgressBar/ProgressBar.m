@@ -183,6 +183,8 @@
     [lastProgressView removeFromSuperview];
     [_progressViewArray removeLastObject];
     
+    _progressIndicator.hidden = NO;
+    
     [self refreshIndicatorPosition];
 }
 
