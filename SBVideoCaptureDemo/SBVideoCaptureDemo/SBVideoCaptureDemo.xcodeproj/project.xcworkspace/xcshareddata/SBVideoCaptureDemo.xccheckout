@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>5FFDCF90-A6D8-410B-AF47-B72F2D2BDB34</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SBVideoCaptureDemo</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>2C115BAC-631A-4EB7-A499-90AAFDA8986E</key>
+		<string>https://github.com/PandaraWen/SBVideoCaptureDemo.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SBVideoCaptureDemo/SBVideoCaptureDemo/SBVideoCaptureDemo.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>2C115BAC-631A-4EB7-A499-90AAFDA8986E</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/PandaraWen/SBVideoCaptureDemo.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>2C115BAC-631A-4EB7-A499-90AAFDA8986E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>2C115BAC-631A-4EB7-A499-90AAFDA8986E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SBVideoCaptureDemo</string>
+		</dict>
+	</array>
+</dict>
+</plist>

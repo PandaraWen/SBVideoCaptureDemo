@@ -12,8 +12,12 @@
 @class SBVideoRecorder;
 @protocol SBVideoRecorderDelegate <NSObject>
 
+@optional
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didStartRecordingToOutPutFileAtURL:(NSURL *)fileURL;
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didFinishRecordingToOutPutFileAtURL:(NSURL *)outputFileURL duration:(CGFloat)videoDuration totalDur:(CGFloat)totalDur error:(NSError *)error;
+- (void)videoRecorder:(SBVideoRecorder *)videoRecorder didRecordingToOutPutFileAtURL:(NSURL *)outputFileURL duration:(CGFloat)videoDuration recordedVideosTotalDur:(CGFloat)totalDur;
+- (void)videoRecorder:(SBVideoRecorder *)videoRecorder didRemoveVideoFileAtURL:(NSURL *)fileURL totalDur:(CGFloat)totalDur error:(NSError *)error;
+
 
 @end
 
@@ -29,5 +33,7 @@
 
 - (void)stopRecording;
 - (void)startRecordingToOutputFileURL:(NSURL *)fileURL;
+- (void)deleteLastVideo;
+- (int)getVideoCount;
 
 @end

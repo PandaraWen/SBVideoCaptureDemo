@@ -11,29 +11,20 @@
 #import "ProgressBar.h"
 #import "SBCaptureToolKit.h"
 #import "SBVideoRecorder.h"
+#import "DeleteButton.h"
 
 #define TIMER_INTERVAL 0.05f
-
-#define DELETE_BTN_NORMAL_IAMGE @"record_delete_normal.png"
-#define DELETE_BTN_DELETE_IAMGE @"record_deletesure_normal.png"
-
-typedef enum {
-    DeleteButtonStyleDelete,
-    DeleteButtonStyleNormal,
-    DeleteButtonStyleDisable,
-}DeleteButtonStyle;
 
 @interface CaptureViewController ()
 
 @property (strong, nonatomic) UIView *maskView;
 
-@property (strong, nonatomic) SBVideoRecorder *recoder;
+@property (strong, nonatomic) SBVideoRecorder *recorder;
 
 @property (strong, nonatomic) ProgressBar *progressBar;
-@property (strong, nonatomic) NSTimer *progressTimer;
-@property (assign, nonatomic) int progressCounter;
 
-@property (strong, nonatomic) UIButton *deleteButton;
+@property (strong, nonatomic) DeleteButton *deleteButton;
+@property (strong, nonatomic) UIButton *okButton;
 
 @end
 
@@ -64,17 +55,18 @@ typedef enum {
     [self initRecorder];
     [SBCaptureToolKit createVideoFolderIfNotExist];
     [self initProgressBar];
-    
+    [self initDeleteButton];
+    [self initOKButton];
     
     [self hideMaskView];
 }
 
 - (void)initRecorder
 {
-    self.recoder = [[SBVideoRecorder alloc] init];
-    _recoder.delegate = self;
-    _recoder.preViewLayer.frame = CGRectMake(0, 0, DEVICE_SIZE.width, DEVICE_SIZE.width);
-    [self.view.layer insertSublayer:_recoder.preViewLayer atIndex:0];
+    self.recorder = [[SBVideoRecorder alloc] init];
+    _recorder.delegate = self;
+    _recorder.preViewLayer.frame = CGRectMake(0, 0, DEVICE_SIZE.width, DEVICE_SIZE.width);
+    [self.view.layer insertSublayer:_recorder.preViewLayer atIndex:0];
 }
 
 - (void)initProgressBar
@@ -87,42 +79,59 @@ typedef enum {
 
 - (void)initDeleteButton
 {
-    CGSize viewSize = self.view.frame.size;
-    self.deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(30, viewSize.height - 35, 50, 50)];
-    [_deleteButton setImage:[UIImage imageNamed:@"record_delete_normal.png"] forState:UIControlStateNormal];
-    [_deleteButton setImage:[UIImage imageNamed:@"record_delete_disable.png"] forState:UIControlStateDisabled];
-    [_deleteButton addTarget:self action:@selector(pressDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_deleteButton];
+    self.deleteButton = [DeleteButton getInstance];
+    [_deleteButton setButtonStyle:DeleteButtonStyleDisable];
+    [SBCaptureToolKit setView:_deleteButton toOrigin:CGPointMake(15, self.view.frame.size.height - _deleteButton.frame.size.height - 10)];
+    [_deleteButton addTarget:self action:@selector(pressDeleteButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:_deleteButton belowSubview:_maskView];
+    
 }
 
-- (void)setDeleteButtonStyle:(DeleteButtonStyle)style
+- (void)initOKButton
 {
-    switch (style) {
-        case DeleteButtonStyleNormal:
-        {
-            _deleteButton.enabled = YES;
-            [_deleteButton setImage:[UIImage imageNamed:DELETE_BTN_NORMAL_IAMGE] forState:UIControlStateNormal];
+    CGFloat okButtonW = 50;
+    self.okButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, okButtonW, okButtonW)];
+    _okButton.enabled = NO;
+    
+    [_okButton setBackgroundImage:[UIImage imageNamed:@"record_icon_hook_normal_bg.png"] forState:UIControlStateNormal];
+    [_okButton setBackgroundImage:[UIImage imageNamed:@"record_icon_hook_highlighted_bg.png"] forState:UIControlStateHighlighted];
+    
+    [_okButton setImage:[UIImage imageNamed:@"record_icon_hook_normal.png"] forState:UIControlStateNormal];
+    
+    [SBCaptureToolKit setView:_okButton toOrigin:CGPointMake(self.view.frame.size.width - okButtonW - 10, self.view.frame.size.height - okButtonW - 10)];
+    
+    [_okButton addTarget:self action:@selector(pressOKButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:_okButton belowSubview:_maskView];
+}
+
+- (void)pressDeleteButton
+{
+    if (_deleteButton.style == DeleteButtonStyleNormal) {//第一次按下删除按钮
+        [_progressBar setLastProgressToStyle:ProgressBarProgressStyleDelete];
+        [_deleteButton setButtonStyle:DeleteButtonStyleDelete];
+    } else if (_deleteButton.style == DeleteButtonStyleDelete) {//第二次按下删除按钮
+        [self deleteLastVideo];
+        [_progressBar deleteLastProgress];
+        
+        if ([_recorder getVideoCount] > 0) {
+            [_deleteButton setButtonStyle:DeleteButtonStyleNormal];
+        } else {
+            [_deleteButton setButtonStyle:DeleteButtonStyleDisable];
         }
-            break;
-        case DeleteButtonStyleDelete:
-        {
-            _deleteButton.enabled = YES;
-            [_deleteButton setImage:[UIImage imageNamed:DELETE_BTN_DELETE_IAMGE] forState:UIControlStateNormal];
-        }
-            break;
-        case DeleteButtonStyleDisable:
-        {
-            _deleteButton.enabled = NO;
-        }
-            break;
-        default:
-            break;
     }
 }
 
-- (void)pressDeleteButton:(UIButton *)button
+- (void)pressOKButton
 {
-    
+    _okButton.enabled = NO;
+}
+
+//删除最后一段视频
+- (void)deleteLastVideo
+{
+    if ([_recorder getVideoCount] > 0) {
+        [_recorder deleteLastVideo];
+    }
 }
 
 - (void)hideMaskView
@@ -164,23 +173,23 @@ typedef enum {
 
 
 
-- (void)startProgressTimer
-{
-    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
-    self.progressCounter = 0;
-}
-
-- (void)stopProgressTimer
-{
-    [_progressTimer invalidate];
-    self.progressTimer = nil;
-}
-
-- (void)onTimer:(NSTimer *)timer
-{
-    self.progressCounter++;
-    [_progressBar setLastProgressToWidth:self.progressCounter * TIMER_INTERVAL / MAX_VIDEO_DUR * DEVICE_SIZE.width];
-}
+//- (void)startProgressTimer
+//{
+//    self.progressTimer = [NSTimer scheduledTimerWithTimeInterval:TIMER_INTERVAL target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
+//    self.progressCounter = 0;
+//}
+//
+//- (void)stopProgressTimer
+//{
+//    [_progressTimer invalidate];
+//    self.progressTimer = nil;
+//}
+//
+//- (void)onTimer:(NSTimer *)timer
+//{
+//    self.progressCounter++;
+//    [_progressBar setLastProgressToWidth:self.progressCounter * TIMER_INTERVAL / MAX_VIDEO_DUR * DEVICE_SIZE.width];
+//}
 
 #pragma mark - SBVideoRecorderDelegate
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didStartRecordingToOutPutFileAtURL:(NSURL *)fileURL
@@ -188,8 +197,9 @@ typedef enum {
     NSLog(@"正在录制视频: %@", fileURL);
     
     [self.progressBar addProgressView];
-    [self startProgressTimer];
     [_progressBar stopShining];
+    
+    [_deleteButton setButtonStyle:DeleteButtonStyleNormal];
 }
 
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didFinishRecordingToOutPutFileAtURL:(NSURL *)outputFileURL duration:(CGFloat)videoDuration totalDur:(CGFloat)totalDur error:(NSError *)error
@@ -200,20 +210,44 @@ typedef enum {
         NSLog(@"录制视频完成: %@", outputFileURL);
     }
     
-    [self stopProgressTimer];
     [_progressBar startShining];
+}
+
+- (void)videoRecorder:(SBVideoRecorder *)videoRecorder didRemoveVideoFileAtURL:(NSURL *)fileURL totalDur:(CGFloat)totalDur error:(NSError *)error
+{
+    if (error) {
+        NSLog(@"删除视频错误: %@", error);
+    } else {
+        NSLog(@"删除了视频: %@", fileURL);
+        NSLog(@"现在视频长度: %f", totalDur);
+    }
+    
+    if ([_recorder getVideoCount] > 0) {
+        [_deleteButton setStyle:DeleteButtonStyleNormal];
+    } else {
+        [_deleteButton setStyle:DeleteButtonStyleDisable];
+    }
+    
+    _okButton.enabled = (totalDur >= MIN_VIDEO_DUR);
+}
+
+- (void)videoRecorder:(SBVideoRecorder *)videoRecorder didRecordingToOutPutFileAtURL:(NSURL *)outputFileURL duration:(CGFloat)videoDuration recordedVideosTotalDur:(CGFloat)totalDur
+{
+    [_progressBar setLastProgressToWidth:videoDuration / MAX_VIDEO_DUR * _progressBar.frame.size.width];
+    
+    _okButton.enabled = (videoDuration + totalDur >= MIN_VIDEO_DUR);
 }
 
 #pragma mark - Touch Event
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
-    [_recoder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+    [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [_recoder stopRecording];
+    [_recorder stopRecording];
 }
 
 @end

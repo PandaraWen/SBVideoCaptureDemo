@@ -26,9 +26,10 @@
 
 @property (strong, nonatomic) NSTimer *countDurTimer;
 @property (assign, nonatomic) CGFloat currentVideoDur;
+@property (assign, nonatomic) NSURL *currentFileURL;
 @property (assign ,nonatomic) CGFloat totalVideoDur;
 
-@property (strong, nonatomic) NSMutableArray *videoFileURLArray;
+@property (strong, nonatomic) NSMutableArray *videoFileDataArray;
 
 @end
 
@@ -48,7 +49,7 @@
 {
     [self initCapture];
     
-    self.videoFileURLArray = [[NSMutableArray alloc] init];
+    self.videoFileDataArray = [[NSMutableArray alloc] init];
     self.totalVideoDur = 0.0f;
 }
 
@@ -85,6 +86,10 @@
 {
     self.currentVideoDur += COUNT_DUR_TIMER_INTERVAL;
     
+    if ([_delegate respondsToSelector:@selector(videoRecorder:didRecordingToOutPutFileAtURL:duration:recordedVideosTotalDur:)]) {
+        [_delegate videoRecorder:self didRecordingToOutPutFileAtURL:_currentFileURL duration:_currentVideoDur recordedVideosTotalDur:_totalVideoDur];
+    }
+    
     if (_totalVideoDur + _currentVideoDur >= MAX_VIDEO_DUR) {
         [self stopRecording];
     }
@@ -97,6 +102,12 @@
 }
 
 #pragma mark - Method
+//现在录了多少视频
+- (int)getVideoCount
+{
+    return [_videoFileDataArray count];
+}
+
 - (void)startRecordingToOutputFileURL:(NSURL *)fileURL
 {
     if (_totalVideoDur >= MAX_VIDEO_DUR) {
@@ -112,9 +123,44 @@
     [_movieFileOutput stopRecording];
 }
 
+- (void)deleteLastVideo
+{
+    if ([_videoFileDataArray count] == 0) {
+        return;
+    }
+    
+    SBVideoData *data = (SBVideoData *)[_videoFileDataArray lastObject];
+    
+    NSURL *videoFileURL = data.fileURL;
+    CGFloat videoDuration = data.duration;
+    
+    [_videoFileDataArray removeLastObject];
+    _totalVideoDur -= videoDuration;
+    
+    //delete
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *filePath = [[videoFileURL absoluteString] stringByReplacingOccurrencesOfString:@"file://" withString:@""];
+        
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        if ([fileManager fileExistsAtPath:filePath]) {
+            NSError *error = nil;
+            [fileManager removeItemAtPath:filePath error:&error];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //delegate
+                if ([_delegate respondsToSelector:@selector(videoRecorder:didRemoveVideoFileAtURL:totalDur:error:)]) {
+                    [_delegate videoRecorder:self didRemoveVideoFileAtURL:videoFileURL totalDur:_totalVideoDur error:error];
+                }
+            });
+        }
+    });
+}
+
 #pragma mark - AVCaptureFileOutputRecordignDelegate
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL fromConnections:(NSArray *)connections
 {
+    self.currentFileURL = fileURL;
+    
     self.currentVideoDur = 0.0f;
     [self startCountDurTimer];
     
@@ -135,7 +181,7 @@
         data.duration = _currentVideoDur;
         data.fileURL = outputFileURL;
         
-        [_videoFileURLArray addObject:outputFileURL];
+        [_videoFileDataArray addObject:data];
     }
     
     if ([_delegate respondsToSelector:@selector(videoRecorder:didFinishRecordingToOutPutFileAtURL:duration:totalDur:error:)]) {

@@ -32,6 +32,13 @@
     view.frame = frame;
 }
 
++ (void)setView:(UIView *)view toOrigin:(CGPoint)origin
+{
+    CGRect frame = view.frame;
+    frame.origin = origin;
+    view.frame = frame;
+}
+
 + (BOOL)createVideoFolderIfNotExist
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
