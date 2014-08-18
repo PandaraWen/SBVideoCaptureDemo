@@ -35,6 +35,8 @@
 @property (strong, nonatomic) UIButton *switchButton;
 @property (strong, nonatomic) UIButton *settingButton;
 
+@property (assign, nonatomic) BOOL initalized;
+
 @end
 
 @implementation CaptureViewController
@@ -61,6 +63,10 @@
 {
     [super viewDidAppear:animated];
     
+    if (_initalized) {
+        return;
+    }
+    
     [self initRecorder];
     [SBCaptureToolKit createVideoFolderIfNotExist];
     [self initProgressBar];
@@ -69,6 +75,8 @@
     [self initTopLayout];
     
     [self hideMaskView];
+    
+    self.initalized = YES;
 }
 
 - (void)initRecorder
@@ -309,10 +317,11 @@
 
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didFinishMergingVideosToOutPutFileAtURL:(NSURL *)outputFileURL
 {
-    MPMoviePlayerViewController *player = [[MPMoviePlayerViewController alloc] initWithContentURL:outputFileURL];
-    [player.moviePlayer prepareToPlay];
+    NSURL *fileURL = [NSURL fileURLWithPath:[[SBCaptureToolKit getVideoSaveFolderPathString] stringByAppendingPathComponent:@"20140818173222merge.mp4"]];
+    NSLog(@"fileURL:%@", fileURL);
+    MPMoviePlayerViewController *player = [[MPMoviePlayerViewController alloc] initWithContentURL:fileURL];
+    [self presentMoviePlayerViewControllerAnimated:player];
     [player.moviePlayer play];
-    [self presentViewController:player animated:YES completion:nil];
 }
 
 #pragma mark - Touch Event

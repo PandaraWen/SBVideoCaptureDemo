@@ -94,8 +94,15 @@
     return fileName;
 }
 
-
-
++ (NSString *)getVideoSaveFolderPathString
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [paths objectAtIndex:0];
+    
+    path = [path stringByAppendingPathComponent:VIDEO_FOLDER];
+    
+    return path;
+}
 @end
 
 
