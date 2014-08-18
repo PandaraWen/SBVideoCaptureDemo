@@ -29,6 +29,8 @@
 		84526C1B199B094700E831FB /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84526C19199B094700E831FB /* MainViewController.xib */; };
 		84526C7F199B516200E831FB /* SBCaptureToolKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 84526C7E199B516200E831FB /* SBCaptureToolKit.m */; };
 		84526C87199B5FF000E831FB /* SBVideoRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 84526C86199B5FF000E831FB /* SBVideoRecorder.m */; };
+		845FBDAD19A1E8D5004AD585 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 845FBDAB19A1E8D5004AD585 /* PlayViewController.m */; };
+		845FBDAE19A1E8D5004AD585 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 845FBDAC19A1E8D5004AD585 /* PlayViewController.xib */; };
 		846F434F199C63C1006EBDDF /* IMG_0975.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 846F434B199C63C1006EBDDF /* IMG_0975.PNG */; };
 		846F4350199C63C1006EBDDF /* IMG_0972.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 846F434C199C63C1006EBDDF /* IMG_0972.PNG */; };
 		846F4351199C63C1006EBDDF /* IMG_0970.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 846F434D199C63C1006EBDDF /* IMG_0970.PNG */; };
@@ -114,6 +116,7 @@
 		843C6B26199C53D100AED0F0 /* ProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressBar.m; sourceTree = "<group>"; };
 		843C6B2F199C56EB00AED0F0 /* DeleteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeleteButton.h; path = DeleteButton/DeleteButton.h; sourceTree = "<group>"; };
 		843C6B30199C56EB00AED0F0 /* DeleteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeleteButton.m; path = DeleteButton/DeleteButton.m; sourceTree = "<group>"; };
+		844A9192199DBCDE00D2E432 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		84526C11199B093C00E831FB /* CaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureViewController.h; sourceTree = "<group>"; };
 		84526C12199B093C00E831FB /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
 		84526C13199B093C00E831FB /* CaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CaptureViewController.xib; sourceTree = "<group>"; };
@@ -125,6 +128,9 @@
 		84526C7E199B516200E831FB /* SBCaptureToolKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCaptureToolKit.m; sourceTree = "<group>"; };
 		84526C85199B5FF000E831FB /* SBVideoRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBVideoRecorder.h; path = SBVideoRecorder/SBVideoRecorder.h; sourceTree = "<group>"; };
 		84526C86199B5FF000E831FB /* SBVideoRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBVideoRecorder.m; path = SBVideoRecorder/SBVideoRecorder.m; sourceTree = "<group>"; };
+		845FBDAA19A1E8D5004AD585 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayViewController.h; path = PlayViewController/PlayViewController.h; sourceTree = "<group>"; };
+		845FBDAB19A1E8D5004AD585 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayViewController.m; path = PlayViewController/PlayViewController.m; sourceTree = "<group>"; };
+		845FBDAC19A1E8D5004AD585 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PlayViewController.xib; path = PlayViewController/PlayViewController.xib; sourceTree = "<group>"; };
 		846F434B199C63C1006EBDDF /* IMG_0975.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_0975.PNG; sourceTree = "<group>"; };
 		846F434C199C63C1006EBDDF /* IMG_0972.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_0972.PNG; sourceTree = "<group>"; };
 		846F434D199C63C1006EBDDF /* IMG_0970.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_0970.PNG; sourceTree = "<group>"; };
@@ -225,6 +231,7 @@
 		8415223B199A05EF0013DB55 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				844A9192199DBCDE00D2E432 /* CoreMedia.framework */,
 				841522B2199A0D130013DB55 /* QuartzCore.framework */,
 				841522B0199A0D000013DB55 /* AVFoundation.framework */,
 				8415223C199A05EF0013DB55 /* Foundation.framework */,
@@ -238,6 +245,7 @@
 		84152242199A05EF0013DB55 /* SBVideoCaptureDemo */ = {
 			isa = PBXGroup;
 			children = (
+				845FBDA919A1E8A6004AD585 /* PlayViewController */,
 				84526C26199B183900E831FB /* image */,
 				84526C16199B094700E831FB /* MainViewController */,
 				84526C0F199B093C00E831FB /* SBVideoCapture */,
@@ -394,6 +402,16 @@
 			name = SBVideoRecoder;
 			sourceTree = "<group>";
 		};
+		845FBDA919A1E8A6004AD585 /* PlayViewController */ = {
+			isa = PBXGroup;
+			children = (
+				845FBDAA19A1E8D5004AD585 /* PlayViewController.h */,
+				845FBDAB19A1E8D5004AD585 /* PlayViewController.m */,
+				845FBDAC19A1E8D5004AD585 /* PlayViewController.xib */,
+			);
+			name = PlayViewController;
+			sourceTree = "<group>";
+		};
 		846F434A199C63B3006EBDDF /* preview */ = {
 			isa = PBXGroup;
 			children = (
@@ -512,6 +530,7 @@
 				84526C15199B093C00E831FB /* CaptureViewController.xib in Resources */,
 				846F4384199C8C43006EBDDF /* g_tabbar_ic_video_nor@2x.png in Resources */,
 				846F4395199C8C43006EBDDF /* record_focus_normal.png in Resources */,
+				845FBDAE19A1E8D5004AD585 /* PlayViewController.xib in Resources */,
 				846F439C199C8C43006EBDDF /* record_icon_hook_normal_bg@2x.png in Resources */,
 				846F4393199C8C43006EBDDF /* record_focus_highlighted.png in Resources */,
 				8415224F199A05EF0013DB55 /* Images.xcassets in Resources */,
@@ -562,6 +581,7 @@
 				84152249199A05EF0013DB55 /* main.m in Sources */,
 				84526C14199B093C00E831FB /* CaptureViewController.m in Sources */,
 				84526C1A199B094700E831FB /* MainViewController.m in Sources */,
+				845FBDAD19A1E8D5004AD585 /* PlayViewController.m in Sources */,
 				84526C7F199B516200E831FB /* SBCaptureToolKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

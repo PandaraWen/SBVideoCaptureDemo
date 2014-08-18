@@ -17,5 +17,6 @@
 
 + (BOOL)createVideoFolderIfNotExist;
 + (NSString *)getVideoSaveFilePathString;
++ (NSString *)getVideoMergeFilePathString;
 
 @end

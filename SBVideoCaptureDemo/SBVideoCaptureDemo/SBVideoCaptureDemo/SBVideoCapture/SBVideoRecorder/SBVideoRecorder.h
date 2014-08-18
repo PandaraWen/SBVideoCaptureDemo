@@ -17,7 +17,7 @@
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didFinishRecordingToOutPutFileAtURL:(NSURL *)outputFileURL duration:(CGFloat)videoDuration totalDur:(CGFloat)totalDur error:(NSError *)error;
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didRecordingToOutPutFileAtURL:(NSURL *)outputFileURL duration:(CGFloat)videoDuration recordedVideosTotalDur:(CGFloat)totalDur;
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didRemoveVideoFileAtURL:(NSURL *)fileURL totalDur:(CGFloat)totalDur error:(NSError *)error;
-
+- (void)videoRecorder:(SBVideoRecorder *)videoRecorder didFinishMergingVideosToOutPutFileAtURL:(NSURL *)outputFileURL ;
 
 @end
 
@@ -27,7 +27,6 @@
 
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *preViewLayer;
 @property (strong, nonatomic) AVCaptureSession *captureSession;
-@property (strong, nonatomic) AVCaptureDeviceInput *captureInput;
 @property (strong, nonatomic) AVCaptureDevice *inputDevice;
 @property (strong, nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 
@@ -38,7 +37,8 @@
 - (void)deleteLastVideo;//调用delegate
 - (void)deleteAllVideo;//不调用delegate
 
-- (int)getVideoCount;
+- (NSUInteger)getVideoCount;
 
+- (void)mergeVideoFiles;
 
 @end

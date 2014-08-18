@@ -8,6 +8,7 @@
 
 #import "SBVideoRecorder.h"
 #import "SBCaptureDefine.h"
+#import "SBCaptureToolKit.h"
 
 @interface SBVideoData: NSObject
 
@@ -59,9 +60,10 @@
     self.captureSession = [[AVCaptureSession alloc] init];
     
     //input
-    self.inputDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    self.captureInput = [AVCaptureDeviceInput deviceInputWithDevice:_inputDevice error:nil];
-    [_captureSession addInput:_captureInput];
+    AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] error:nil];
+    AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio] error:nil];
+    [_captureSession addInput:videoDeviceInput];
+    [_captureSession addInput:audioDeviceInput];
     
     //output
     self.movieFileOutput = [[AVCaptureMovieFileOutput alloc] init];
@@ -101,7 +103,119 @@
     self.countDurTimer = nil;
 }
 
+//必须是fileURL
+//截取将会是视频的中间部分
+//这里假设拍摄出来的视频总是高大于宽的
+- (void)mergeAndExportVideosAtFileURLs:(NSArray *)fileURLArray
+{
+    NSError *error = nil;
+
+    CGSize renderSize = CGSizeMake(0, 0);
+    
+    NSMutableArray *layerInstructionArray = [[NSMutableArray alloc] init];
+    
+    AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];
+    
+    CMTime totalDuration = kCMTimeZero;
+    for (NSURL *fileURL in fileURLArray) {
+        AVAsset *asset = [AVAsset assetWithURL:fileURL];
+        
+        if (!asset) {
+            continue;
+        }
+        
+        AVAssetTrack *assetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+        AVMutableCompositionTrack *videoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
+        
+        [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration)
+                            ofTrack:assetTrack
+                             atTime:totalDuration
+                              error:&error];
+        
+        //fix orientationissue
+        AVMutableVideoCompositionLayerInstruction *layerInstruciton = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoTrack];
+        
+        totalDuration = CMTimeAdd(totalDuration, asset.duration);
+        
+        [layerInstruciton setTransform:CGAffineTransformTranslate(assetTrack.preferredTransform, -(assetTrack.naturalSize.width - assetTrack.naturalSize.height) / 2.0, 0.0) atTime:kCMTimeZero];
+        [layerInstruciton setOpacity:0.0 atTime:totalDuration];
+        
+        //data
+        [layerInstructionArray addObject:layerInstruciton];
+        
+        renderSize.width = MAX(renderSize.width, assetTrack.naturalSize.height);
+        renderSize.height = MAX(renderSize.height, assetTrack.naturalSize.width);
+    }
+    
+    //get save path
+    NSURL *mergeFileURL = [NSURL fileURLWithPath:[SBCaptureToolKit getVideoMergeFilePathString]];
+    
+    //export
+    AVMutableVideoCompositionInstruction *mainInstruciton = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+    mainInstruciton.timeRange = CMTimeRangeMake(kCMTimeZero, totalDuration);
+    mainInstruciton.layerInstructions = layerInstructionArray;
+    AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
+    mainCompositionInst.instructions = @[mainInstruciton];
+    mainCompositionInst.frameDuration = CMTimeMake(1, 30);
+    CGFloat renderW = MIN(renderSize.width, renderSize.height);
+    mainCompositionInst.renderSize = CGSizeMake(renderW, renderW);
+    
+    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetHighestQuality];
+    exporter.videoComposition = mainCompositionInst;
+    exporter.outputURL = mergeFileURL;
+    exporter.outputFileType = AVFileTypeMPEG4;
+    exporter.shouldOptimizeForNetworkUse = YES;
+    [exporter exportAsynchronouslyWithCompletionHandler:^{
+        if ([_delegate respondsToSelector:@selector(videoRecorder:didFinishMergingVideosToOutPutFileAtURL:)]) {
+            [_delegate videoRecorder:self didFinishMergingVideosToOutPutFileAtURL:mergeFileURL];
+        }
+        NSLog(@"合成完成:%@", mergeFileURL);
+    }];
+}
+
+//- (void)mergeAndExportVideosAtFileURLs:(NSArray *)fileURLArray
+//{
+//    if ([fileURLArray count] < 2) {
+//        return;
+//    }
+//    
+//    AVAsset *firstAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:[fileURLArray objectAtIndex:0]]];
+//    AVAsset *secondAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:[fileURLArray objectAtIndex:1]]];
+//    
+//    //1 -
+//    AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];
+//    
+//    //2 -
+//    AVMutableCompositionTrack *firstVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
+//                                                                             preferredTrackID:kCMPersistentTrackID_Invalid];
+//    [firstVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstAsset.duration)
+//                             ofTrack:[[firstAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
+//                              atTime:kCMTimeZero
+//                               error:nil];
+//    
+//    
+//    AVMutableCompositionTrack *secondVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
+//                                                                              preferredTrackID:kCMPersistentTrackID_Invalid];
+//    [secondVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, secondAsset.duration)
+//                              ofTrack:[[secondAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
+//                               atTime:firstAsset.duration
+//                                error:nil];
+//    
+//    //2.1 -
+//    AVMutableVideoCompositionInstruction *mainInstruciton = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+//}
+
 #pragma mark - Method
+- (void)mergeVideoFiles
+{
+    NSMutableArray *fileURLArray = [[NSMutableArray alloc] init];
+    for (SBVideoData *data in _videoFileDataArray) {
+        [fileURLArray addObject:data.fileURL];
+    }
+    
+    [self mergeAndExportVideosAtFileURLs:fileURLArray];
+}
+
 //总时长
 - (CGFloat)getTotalVideoDuration
 {
@@ -109,7 +223,7 @@
 }
 
 //现在录了多少视频
-- (int)getVideoCount
+- (NSUInteger)getVideoCount
 {
     return [_videoFileDataArray count];
 }

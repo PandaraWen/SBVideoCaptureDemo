@@ -13,6 +13,9 @@
 #import "SBVideoRecorder.h"
 #import "DeleteButton.h"
 
+#import <MobileCoreServices/UTCoreTypes.h>
+#import <MediaPlayer/MediaPlayer.h>
+
 #define TIMER_INTERVAL 0.05f
 
 #define TAG_ALERTVIEW_CLOSE_CONTROLLER 10086
@@ -182,6 +185,7 @@
 - (void)pressOKButton
 {
     _okButton.enabled = NO;
+    [_recorder mergeVideoFiles];
 }
 
 //放弃本次视频，并且关闭页面
@@ -301,6 +305,14 @@
     [_progressBar setLastProgressToWidth:videoDuration / MAX_VIDEO_DUR * _progressBar.frame.size.width];
     
     _okButton.enabled = (videoDuration + totalDur >= MIN_VIDEO_DUR);
+}
+
+- (void)videoRecorder:(SBVideoRecorder *)videoRecorder didFinishMergingVideosToOutPutFileAtURL:(NSURL *)outputFileURL
+{
+    MPMoviePlayerViewController *player = [[MPMoviePlayerViewController alloc] initWithContentURL:outputFileURL];
+    [player.moviePlayer prepareToPlay];
+    [player.moviePlayer play];
+    [self presentViewController:player animated:YES completion:nil];
 }
 
 #pragma mark - Touch Event
