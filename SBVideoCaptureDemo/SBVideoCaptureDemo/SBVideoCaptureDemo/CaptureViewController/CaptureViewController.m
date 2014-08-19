@@ -171,6 +171,8 @@
     [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_disable.png"] forState:UIControlStateDisabled];
     [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateSelected];
     [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateHighlighted];
+    [_switchButton addTarget:self action:@selector(pressSwitchButton) forControlEvents:UIControlEventTouchUpInside];
+    _switchButton.enabled = [_recorder isFrontCameraSupported];
     [self.view insertSubview:_switchButton belowSubview:_maskView];
     
     //setting
@@ -195,7 +197,8 @@
 
 - (void)pressSwitchButton
 {
-    
+    [_recorder switchCamera];
+    _switchButton.selected = !_switchButton.selected;
 }
 
 - (void)pressSettingButton

@@ -32,6 +32,12 @@
 
 @property (strong, nonatomic) NSMutableArray *videoFileDataArray;
 
+@property (assign, nonatomic) BOOL isFrontCameraSupported;
+@property (assign, nonatomic) BOOL isCameraSupported;
+@property (assign, nonatomic) BOOL isUsingFrontCamera;
+
+@property (strong, nonatomic) AVCaptureDeviceInput *videoDeviceInput;
+
 @end
 
 @implementation SBVideoRecorder
@@ -60,9 +66,34 @@
     self.captureSession = [[AVCaptureSession alloc] init];
     
     //input
-    AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo] error:nil];
+    AVCaptureDevice *frontCamera = nil;
+    AVCaptureDevice *backCamera = nil;
+    
+    NSArray *cameras = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *camera in cameras) {
+        if (camera.position == AVCaptureDevicePositionFront) {
+            frontCamera = camera;
+        } else {
+            backCamera = camera;
+        }
+    }
+    
+    if (!backCamera) {
+        self.isCameraSupported = NO;
+        return;
+    } else {
+        self.isCameraSupported = YES;
+    }
+    
+    if (!frontCamera) {
+        self.isFrontCameraSupported = NO;
+    } else {
+        self.isFrontCameraSupported = YES;
+    }
+    
+    self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:nil];
     AVCaptureDeviceInput *audioDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio] error:nil];
-    [_captureSession addInput:videoDeviceInput];
+    [_captureSession addInput:_videoDeviceInput];
     [_captureSession addInput:audioDeviceInput];
     
     //output
@@ -117,6 +148,10 @@
     AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];
     
     CMTime totalDuration = kCMTimeZero;
+    
+    //先去assetTrack 也为了取renderSize
+    NSMutableArray *assetTrackArray = [[NSMutableArray alloc] init];
+    NSMutableArray *assetArray = [[NSMutableArray alloc] init];
     for (NSURL *fileURL in fileURLArray) {
         AVAsset *asset = [AVAsset assetWithURL:fileURL];
         
@@ -124,7 +159,22 @@
             continue;
         }
         
+        [assetArray addObject:asset];
+        
         AVAssetTrack *assetTrack = [[asset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+        [assetTrackArray addObject:assetTrack];
+        
+        renderSize.width = MAX(renderSize.width, assetTrack.naturalSize.height);
+        renderSize.height = MAX(renderSize.height, assetTrack.naturalSize.width);
+    }
+    
+    CGFloat renderW = MIN(renderSize.width, renderSize.height);
+    
+    for (int i = 0; i < [assetArray count] && i < [assetTrackArray count]; i++) {
+
+        AVAsset *asset = [assetArray objectAtIndex:i];
+        AVAssetTrack *assetTrack = [assetTrackArray objectAtIndex:i];
+        
         AVMutableCompositionTrack *videoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
         
         [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration)
@@ -137,14 +187,18 @@
         
         totalDuration = CMTimeAdd(totalDuration, asset.duration);
         
-        [layerInstruciton setTransform:CGAffineTransformTranslate(assetTrack.preferredTransform, -(assetTrack.naturalSize.width - assetTrack.naturalSize.height) / 2.0, 0.0) atTime:kCMTimeZero];
+        CGFloat rate;
+        rate = renderW / MIN(assetTrack.naturalSize.width, assetTrack.naturalSize.height);
+        
+        CGAffineTransform layerTransform = CGAffineTransformMake(assetTrack.preferredTransform.a, assetTrack.preferredTransform.b, assetTrack.preferredTransform.c, assetTrack.preferredTransform.d, assetTrack.preferredTransform.tx * rate, assetTrack.preferredTransform.ty * rate);
+        layerTransform = CGAffineTransformConcat(layerTransform, CGAffineTransformMake(1, 0, 0, 1, 0, -(assetTrack.naturalSize.width - assetTrack.naturalSize.height) / 2.0));//向上移动取中部影响
+        layerTransform = CGAffineTransformScale(layerTransform, rate, rate);//放缩，解决前后摄像结果大小不对称
+        
+        [layerInstruciton setTransform:layerTransform atTime:kCMTimeZero];
         [layerInstruciton setOpacity:0.0 atTime:totalDuration];
         
         //data
         [layerInstructionArray addObject:layerInstruciton];
-        
-        renderSize.width = MAX(renderSize.width, assetTrack.naturalSize.height);
-        renderSize.height = MAX(renderSize.height, assetTrack.naturalSize.width);
     }
     
     //get save path
@@ -157,10 +211,9 @@
     AVMutableVideoComposition *mainCompositionInst = [AVMutableVideoComposition videoComposition];
     mainCompositionInst.instructions = @[mainInstruciton];
     mainCompositionInst.frameDuration = CMTimeMake(1, 30);
-    CGFloat renderW = MIN(renderSize.width, renderSize.height);
     mainCompositionInst.renderSize = CGSizeMake(renderW, renderW);
     
-    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetHighestQuality];
+    AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetMediumQuality];
     exporter.videoComposition = mainCompositionInst;
     exporter.outputURL = mergeFileURL;
     exporter.outputFileType = AVFileTypeMPEG4;
@@ -174,8 +227,55 @@
     }];
 }
 
-#pragma mark - Method
+- (AVCaptureDevice *)getCameraDevice:(BOOL)isFront
+{
+    NSArray *cameras = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    
+    AVCaptureDevice *frontCamera;
+    AVCaptureDevice *backCamera;
+    
+    for (AVCaptureDevice *camera in cameras) {
+        if (camera.position == AVCaptureDevicePositionBack) {
+            backCamera = camera;
+        } else {
+            frontCamera = camera;
+        }
+    }
+    
+    if (isFront) {
+        return frontCamera;
+    }
+    
+    return backCamera;
+}
 
+#pragma mark - Method
+- (void)switchCamera
+{
+    if (!_isFrontCameraSupported || !_isCameraSupported || !_videoDeviceInput) {
+        return;
+    }
+    
+    [_captureSession beginConfiguration];
+    
+    [_captureSession removeInput:_videoDeviceInput];
+    
+    self.isUsingFrontCamera = !_isUsingFrontCamera;
+    AVCaptureDevice *device = [self getCameraDevice:_isUsingFrontCamera];
+    self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
+    [_captureSession addInput:_videoDeviceInput];
+    [_captureSession commitConfiguration];
+}
+
+- (BOOL)isFrontCameraSupported
+{
+    return _isFrontCameraSupported;
+}
+
+- (BOOL)isCameraSupported
+{
+    return _isFrontCameraSupported;
+}
 
 - (void)mergeVideoFiles
 {
@@ -209,19 +309,9 @@
     [_movieFileOutput startRecordingToOutputFileURL:fileURL recordingDelegate:self];
 }
 
-//初始化recorder之后不需要显式调用
-- (void)startSession
-{
-    [_captureSession startRunning];
-}
-
-- (void)stopSession
-{
-    [_captureSession stopRunning];
-}
-
 - (void)stopCurrentVideoRecording
 {
+    [self stopCountDurTimer];
     [_movieFileOutput stopRecording];
 }
 
@@ -295,7 +385,6 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL fromConnections:(NSArray *)connections error:(NSError *)error
 {
-    [self stopCountDurTimer];
     self.totalVideoDur += _currentVideoDur;
     NSLog(@"本段视频长度: %f", _currentVideoDur);
     NSLog(@"现在的视频总长度: %f", _totalVideoDur);
