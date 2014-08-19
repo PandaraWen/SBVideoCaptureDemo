@@ -12,6 +12,8 @@
 #import "SBCaptureToolKit.h"
 #import "SBVideoRecorder.h"
 #import "DeleteButton.h"
+#import "PlayViewController.h"
+#import "MBProgressHUD.h"
 
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <MediaPlayer/MediaPlayer.h>
@@ -34,8 +36,12 @@
 @property (strong, nonatomic) UIButton *closeButton;
 @property (strong, nonatomic) UIButton *switchButton;
 @property (strong, nonatomic) UIButton *settingButton;
+@property (strong, nonatomic) UIButton *recordButton;
+
+@property (strong, nonatomic) MBProgressHUD *hud;
 
 @property (assign, nonatomic) BOOL initalized;
+@property (assign, nonatomic) BOOL isProcessingData;
 
 @end
 
@@ -70,6 +76,7 @@
     [self initRecorder];
     [SBCaptureToolKit createVideoFolderIfNotExist];
     [self initProgressBar];
+    [self initRecordButton];
     [self initDeleteButton];
     [self initOKButton];
     [self initTopLayout];
@@ -97,12 +104,30 @@
 
 - (void)initDeleteButton
 {
+    if (_isProcessingData) {
+        return;
+    }
+    
     self.deleteButton = [DeleteButton getInstance];
     [_deleteButton setButtonStyle:DeleteButtonStyleDisable];
     [SBCaptureToolKit setView:_deleteButton toOrigin:CGPointMake(15, self.view.frame.size.height - _deleteButton.frame.size.height - 10)];
     [_deleteButton addTarget:self action:@selector(pressDeleteButton) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGPoint center = _deleteButton.center;
+    center.y = _recordButton.center.y;
+    _deleteButton.center = center;
+    
     [self.view insertSubview:_deleteButton belowSubview:_maskView];
     
+}
+
+- (void)initRecordButton
+{
+    CGFloat buttonW = 80.0f;
+    self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_SIZE.width - buttonW) / 2.0, _progressBar.frame.origin.y + _progressBar.frame.size.height + 10, buttonW, buttonW)];
+    [_recordButton setImage:[UIImage imageNamed:@"video_longvideo_btn_shoot.png"] forState:UIControlStateNormal];
+    _recordButton.userInteractionEnabled = NO;
+    [self.view insertSubview:_recordButton belowSubview:_maskView];
 }
 
 - (void)initOKButton
@@ -119,6 +144,11 @@
     [SBCaptureToolKit setView:_okButton toOrigin:CGPointMake(self.view.frame.size.width - okButtonW - 10, self.view.frame.size.height - okButtonW - 10)];
     
     [_okButton addTarget:self action:@selector(pressOKButton) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGPoint center = _okButton.center;
+    center.y = _recordButton.center.y;
+    _okButton.center = center;
+    
     [self.view insertSubview:_okButton belowSubview:_maskView];
 }
 
@@ -154,7 +184,7 @@
 
 - (void)pressCloseButton
 {
-    if ([_recorder getTotalVideoDuration] > 0.0f) {
+    if ([_recorder getVideoCount] > 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提醒" message:@"放弃这个视频真的好么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"放弃", nil];
         alertView.tag = TAG_ALERTVIEW_CLOSE_CONTROLLER;
         [alertView show];
@@ -192,8 +222,19 @@
 
 - (void)pressOKButton
 {
-    _okButton.enabled = NO;
+    if (_isProcessingData) {
+        return;
+    }
+    
+    if (!self.hud) {
+        self.hud = [[MBProgressHUD alloc] initWithView:self.view];
+        _hud.labelText = @"努力处理中";
+    }
+    [_hud show:YES];
+    [self.view addSubview:_hud];
+    
     [_recorder mergeVideoFiles];
+    self.isProcessingData = YES;
 }
 
 //放弃本次视频，并且关闭页面
@@ -288,6 +329,10 @@
     }
     
     [_progressBar startShining];
+    
+    if (totalDur >= MAX_VIDEO_DUR) {
+        [self pressOKButton];
+    }
 }
 
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didRemoveVideoFileAtURL:(NSURL *)fileURL totalDur:(CGFloat)totalDur error:(NSError *)error
@@ -317,29 +362,40 @@
 
 - (void)videoRecorder:(SBVideoRecorder *)videoRecorder didFinishMergingVideosToOutPutFileAtURL:(NSURL *)outputFileURL
 {
-    NSURL *fileURL = [NSURL fileURLWithPath:[[SBCaptureToolKit getVideoSaveFolderPathString] stringByAppendingPathComponent:@"20140818173222merge.mp4"]];
-    NSLog(@"fileURL:%@", fileURL);
-    MPMoviePlayerViewController *player = [[MPMoviePlayerViewController alloc] initWithContentURL:fileURL];
-    [self presentMoviePlayerViewControllerAnimated:player];
-    [player.moviePlayer play];
+    [_hud hide:YES];
+    self.isProcessingData = NO;
+    PlayViewController *playCon = [[PlayViewController alloc] initWithNibName:@"PlayViewController" bundle:nil withVideoFileURL:outputFileURL];
+    [self.navigationController pushViewController:playCon animated:YES];
 }
 
 #pragma mark - Touch Event
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+    if (_isProcessingData) {
+        return;
+    }
+    
     if (_deleteButton.style == DeleteButtonStyleDelete) {//取消删除
         [_deleteButton setButtonStyle:DeleteButtonStyleNormal];
         [_progressBar setLastProgressToStyle:ProgressBarProgressStyleNormal];
         return;
     }
     
-    NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
-    [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [touch locationInView:_recordButton.superview];
+    if (CGRectContainsPoint(_recordButton.frame, touchPoint)) {
+        NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
+        [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [_recorder stopRecording];
+    if (_isProcessingData) {
+        return;
+    }
+    
+    [_recorder stopCurrentVideoRecording];
 }
 
 #pragma mark - UIAlertViewDelegate

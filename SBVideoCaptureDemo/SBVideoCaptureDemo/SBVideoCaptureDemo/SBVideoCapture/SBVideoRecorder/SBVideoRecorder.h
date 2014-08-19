@@ -31,11 +31,14 @@
 @property (strong, nonatomic) AVCaptureMovieFileOutput *movieFileOutput;
 
 - (CGFloat)getTotalVideoDuration;
-- (void)stopRecording;
+- (void)stopCurrentVideoRecording;
 - (void)startRecordingToOutputFileURL:(NSURL *)fileURL;
 
 - (void)deleteLastVideo;//调用delegate
 - (void)deleteAllVideo;//不调用delegate
+
+- (void)startSession;
+- (void)stopSession;
 
 - (NSUInteger)getVideoCount;
 

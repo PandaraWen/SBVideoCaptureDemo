@@ -21,10 +21,21 @@
 		84152262199A05EF0013DB55 /* SBVideoCaptureDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 84152261199A05EF0013DB55 /* SBVideoCaptureDemoTests.m */; };
 		841522B1199A0D000013DB55 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 841522B0199A0D000013DB55 /* AVFoundation.framework */; };
 		841522B3199A0D130013DB55 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 841522B2199A0D130013DB55 /* QuartzCore.framework */; };
-		843C6B27199C53D100AED0F0 /* ProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 843C6B26199C53D100AED0F0 /* ProgressBar.m */; };
-		843C6B31199C56EB00AED0F0 /* DeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 843C6B30199C56EB00AED0F0 /* DeleteButton.m */; };
-		84526C14199B093C00E831FB /* CaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84526C12199B093C00E831FB /* CaptureViewController.m */; };
-		84526C15199B093C00E831FB /* CaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84526C13199B093C00E831FB /* CaptureViewController.xib */; };
+		842A674819A2E2FC005B3D7E /* vedio_nav_btn_back_nor.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674419A2E2FC005B3D7E /* vedio_nav_btn_back_nor.png */; };
+		842A674919A2E2FC005B3D7E /* vedio_nav_btn_back_nor@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674519A2E2FC005B3D7E /* vedio_nav_btn_back_nor@2x.png */; };
+		842A674A19A2E2FC005B3D7E /* vedio_nav_btn_back_pre.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674619A2E2FC005B3D7E /* vedio_nav_btn_back_pre.png */; };
+		842A674B19A2E2FC005B3D7E /* vedio_nav_btn_back_pre@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674719A2E2FC005B3D7E /* vedio_nav_btn_back_pre@2x.png */; };
+		842A675019A2E926005B3D7E /* video_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674C19A2E926005B3D7E /* video_icon.png */; };
+		842A675119A2E926005B3D7E /* video_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674D19A2E926005B3D7E /* video_icon@2x.png */; };
+		842A675219A2E926005B3D7E /* video_longvideo_btn_pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674E19A2E926005B3D7E /* video_longvideo_btn_pause.png */; };
+		842A675319A2E926005B3D7E /* video_longvideo_btn_pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A674F19A2E926005B3D7E /* video_longvideo_btn_pause@2x.png */; };
+		842A675E19A2FB4D005B3D7E /* CaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A675619A2FB4D005B3D7E /* CaptureViewController.m */; };
+		842A675F19A2FB4D005B3D7E /* CaptureViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 842A675719A2FB4D005B3D7E /* CaptureViewController.xib */; };
+		842A676019A2FB4D005B3D7E /* DeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A675A19A2FB4D005B3D7E /* DeleteButton.m */; };
+		842A676119A2FB4D005B3D7E /* ProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A675D19A2FB4D005B3D7E /* ProgressBar.m */; };
+		842A676819A3007A005B3D7E /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 842A676719A3007A005B3D7E /* MBProgressHUD.m */; };
+		842A676B19A30898005B3D7E /* video_longvideo_btn_shoot.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A676919A30898005B3D7E /* video_longvideo_btn_shoot.png */; };
+		842A676C19A30898005B3D7E /* video_longvideo_btn_shoot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 842A676A19A30898005B3D7E /* video_longvideo_btn_shoot@2x.png */; };
 		84526C1A199B094700E831FB /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84526C18199B094700E831FB /* MainViewController.m */; };
 		84526C1B199B094700E831FB /* MainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84526C19199B094700E831FB /* MainViewController.xib */; };
 		84526C7F199B516200E831FB /* SBCaptureToolKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 84526C7E199B516200E831FB /* SBCaptureToolKit.m */; };
@@ -113,14 +124,26 @@
 		84152261199A05EF0013DB55 /* SBVideoCaptureDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBVideoCaptureDemoTests.m; sourceTree = "<group>"; };
 		841522B0199A0D000013DB55 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		841522B2199A0D130013DB55 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		843C6B25199C53D100AED0F0 /* ProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressBar.h; sourceTree = "<group>"; };
-		843C6B26199C53D100AED0F0 /* ProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressBar.m; sourceTree = "<group>"; };
-		843C6B2F199C56EB00AED0F0 /* DeleteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeleteButton.h; path = DeleteButton/DeleteButton.h; sourceTree = "<group>"; };
-		843C6B30199C56EB00AED0F0 /* DeleteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DeleteButton.m; path = DeleteButton/DeleteButton.m; sourceTree = "<group>"; };
+		842A674419A2E2FC005B3D7E /* vedio_nav_btn_back_nor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vedio_nav_btn_back_nor.png; sourceTree = "<group>"; };
+		842A674519A2E2FC005B3D7E /* vedio_nav_btn_back_nor@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vedio_nav_btn_back_nor@2x.png"; sourceTree = "<group>"; };
+		842A674619A2E2FC005B3D7E /* vedio_nav_btn_back_pre.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = vedio_nav_btn_back_pre.png; sourceTree = "<group>"; };
+		842A674719A2E2FC005B3D7E /* vedio_nav_btn_back_pre@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "vedio_nav_btn_back_pre@2x.png"; sourceTree = "<group>"; };
+		842A674C19A2E926005B3D7E /* video_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_icon.png; sourceTree = "<group>"; };
+		842A674D19A2E926005B3D7E /* video_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_icon@2x.png"; sourceTree = "<group>"; };
+		842A674E19A2E926005B3D7E /* video_longvideo_btn_pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_longvideo_btn_pause.png; sourceTree = "<group>"; };
+		842A674F19A2E926005B3D7E /* video_longvideo_btn_pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_longvideo_btn_pause@2x.png"; sourceTree = "<group>"; };
+		842A675519A2FB4D005B3D7E /* CaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureViewController.h; sourceTree = "<group>"; };
+		842A675619A2FB4D005B3D7E /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
+		842A675719A2FB4D005B3D7E /* CaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CaptureViewController.xib; sourceTree = "<group>"; };
+		842A675919A2FB4D005B3D7E /* DeleteButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteButton.h; sourceTree = "<group>"; };
+		842A675A19A2FB4D005B3D7E /* DeleteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteButton.m; sourceTree = "<group>"; };
+		842A675C19A2FB4D005B3D7E /* ProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressBar.h; sourceTree = "<group>"; };
+		842A675D19A2FB4D005B3D7E /* ProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressBar.m; sourceTree = "<group>"; };
+		842A676619A3007A005B3D7E /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		842A676719A3007A005B3D7E /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		842A676919A30898005B3D7E /* video_longvideo_btn_shoot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_longvideo_btn_shoot.png; sourceTree = "<group>"; };
+		842A676A19A30898005B3D7E /* video_longvideo_btn_shoot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_longvideo_btn_shoot@2x.png"; sourceTree = "<group>"; };
 		844A9192199DBCDE00D2E432 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		84526C11199B093C00E831FB /* CaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureViewController.h; sourceTree = "<group>"; };
-		84526C12199B093C00E831FB /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
-		84526C13199B093C00E831FB /* CaptureViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CaptureViewController.xib; sourceTree = "<group>"; };
 		84526C17199B094700E831FB /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		84526C18199B094700E831FB /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		84526C19199B094700E831FB /* MainViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainViewController.xib; sourceTree = "<group>"; };
@@ -249,6 +272,7 @@
 		84152242199A05EF0013DB55 /* SBVideoCaptureDemo */ = {
 			isa = PBXGroup;
 			children = (
+				842A675419A2FB4D005B3D7E /* CaptureViewController */,
 				845FBDF819A2087D004AD585 /* PlayViewController */,
 				84526C26199B183900E831FB /* image */,
 				84526C16199B094700E831FB /* MainViewController */,
@@ -264,6 +288,7 @@
 		84152243199A05EF0013DB55 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				842A676519A3007A005B3D7E /* MBProgressHUD */,
 				846F434A199C63B3006EBDDF /* preview */,
 				84152244199A05EF0013DB55 /* SBVideoCaptureDemo-Info.plist */,
 				84152245199A05EF0013DB55 /* InfoPlist.strings */,
@@ -291,22 +316,43 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		843C6B24199C53D100AED0F0 /* ProgressBar */ = {
+		842A675419A2FB4D005B3D7E /* CaptureViewController */ = {
 			isa = PBXGroup;
 			children = (
-				843C6B25199C53D100AED0F0 /* ProgressBar.h */,
-				843C6B26199C53D100AED0F0 /* ProgressBar.m */,
+				842A675819A2FB4D005B3D7E /* DeleteButton */,
+				842A675B19A2FB4D005B3D7E /* ProgressBar */,
+				842A675519A2FB4D005B3D7E /* CaptureViewController.h */,
+				842A675619A2FB4D005B3D7E /* CaptureViewController.m */,
+				842A675719A2FB4D005B3D7E /* CaptureViewController.xib */,
+			);
+			path = CaptureViewController;
+			sourceTree = "<group>";
+		};
+		842A675819A2FB4D005B3D7E /* DeleteButton */ = {
+			isa = PBXGroup;
+			children = (
+				842A675919A2FB4D005B3D7E /* DeleteButton.h */,
+				842A675A19A2FB4D005B3D7E /* DeleteButton.m */,
+			);
+			path = DeleteButton;
+			sourceTree = "<group>";
+		};
+		842A675B19A2FB4D005B3D7E /* ProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+				842A675C19A2FB4D005B3D7E /* ProgressBar.h */,
+				842A675D19A2FB4D005B3D7E /* ProgressBar.m */,
 			);
 			path = ProgressBar;
 			sourceTree = "<group>";
 		};
-		843C6B28199C55A100AED0F0 /* DeleteButton */ = {
+		842A676519A3007A005B3D7E /* MBProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
-				843C6B2F199C56EB00AED0F0 /* DeleteButton.h */,
-				843C6B30199C56EB00AED0F0 /* DeleteButton.m */,
+				842A676619A3007A005B3D7E /* MBProgressHUD.h */,
+				842A676719A3007A005B3D7E /* MBProgressHUD.m */,
 			);
-			name = DeleteButton;
+			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		84526C0F199B093C00E831FB /* SBVideoCapture */ = {
@@ -316,21 +362,8 @@
 				84526C25199B0D9C00E831FB /* SBCaptureDefine.h */,
 				84526C7D199B516200E831FB /* SBCaptureToolKit.h */,
 				84526C7E199B516200E831FB /* SBCaptureToolKit.m */,
-				84526C10199B093C00E831FB /* CaptureViewController */,
 			);
 			path = SBVideoCapture;
-			sourceTree = "<group>";
-		};
-		84526C10199B093C00E831FB /* CaptureViewController */ = {
-			isa = PBXGroup;
-			children = (
-				843C6B28199C55A100AED0F0 /* DeleteButton */,
-				843C6B24199C53D100AED0F0 /* ProgressBar */,
-				84526C11199B093C00E831FB /* CaptureViewController.h */,
-				84526C12199B093C00E831FB /* CaptureViewController.m */,
-				84526C13199B093C00E831FB /* CaptureViewController.xib */,
-			);
-			path = CaptureViewController;
 			sourceTree = "<group>";
 		};
 		84526C16199B094700E831FB /* MainViewController */ = {
@@ -346,6 +379,16 @@
 		84526C26199B183900E831FB /* image */ = {
 			isa = PBXGroup;
 			children = (
+				842A676919A30898005B3D7E /* video_longvideo_btn_shoot.png */,
+				842A676A19A30898005B3D7E /* video_longvideo_btn_shoot@2x.png */,
+				842A674C19A2E926005B3D7E /* video_icon.png */,
+				842A674D19A2E926005B3D7E /* video_icon@2x.png */,
+				842A674E19A2E926005B3D7E /* video_longvideo_btn_pause.png */,
+				842A674F19A2E926005B3D7E /* video_longvideo_btn_pause@2x.png */,
+				842A674419A2E2FC005B3D7E /* vedio_nav_btn_back_nor.png */,
+				842A674519A2E2FC005B3D7E /* vedio_nav_btn_back_nor@2x.png */,
+				842A674619A2E2FC005B3D7E /* vedio_nav_btn_back_pre.png */,
+				842A674719A2E2FC005B3D7E /* vedio_nav_btn_back_pre@2x.png */,
 				846F4353199C8C42006EBDDF /* g_tabbar_ic_video_down.png */,
 				846F4354199C8C42006EBDDF /* g_tabbar_ic_video_down@2x.png */,
 				846F4355199C8C42006EBDDF /* g_tabbar_ic_video_nor.png */,
@@ -514,14 +557,17 @@
 				846F43A9199C8C43006EBDDF /* record_tool_disable.png in Resources */,
 				846F4396199C8C43006EBDDF /* record_focus_normal@2x.png in Resources */,
 				846F439A199C8C43006EBDDF /* record_icon_hook_highlighted_bg@2x.png in Resources */,
+				842A675319A2E926005B3D7E /* video_longvideo_btn_pause@2x.png in Resources */,
 				846F43AB199C8C43006EBDDF /* record_tool_highlighted.png in Resources */,
 				846F4386199C8C43006EBDDF /* record_close_disable@2x.png in Resources */,
+				842A674919A2E2FC005B3D7E /* vedio_nav_btn_back_nor@2x.png in Resources */,
 				846F4390199C8C43006EBDDF /* record_deletesure_normal@2x.png in Resources */,
 				846F4350199C63C1006EBDDF /* IMG_0972.PNG in Resources */,
 				846F4387199C8C43006EBDDF /* record_close_highlighted.png in Resources */,
 				846F43A8199C8C43006EBDDF /* record_progressbar_front@2x.png in Resources */,
 				846F439E199C8C43006EBDDF /* record_icon_hook_normal@2x.png in Resources */,
 				846F4381199C8C43006EBDDF /* g_tabbar_ic_video_down.png in Resources */,
+				842A674819A2E2FC005B3D7E /* vedio_nav_btn_back_nor.png in Resources */,
 				846F43AA199C8C43006EBDDF /* record_tool_disable@2x.png in Resources */,
 				846F4391199C8C43006EBDDF /* record_focus_disable.png in Resources */,
 				846F4383199C8C43006EBDDF /* g_tabbar_ic_video_nor.png in Resources */,
@@ -529,13 +575,16 @@
 				846F4398199C8C43006EBDDF /* record_focus_off@2x.png in Resources */,
 				846F43A4199C8C43006EBDDF /* record_lensflip_highlighted@2x.png in Resources */,
 				846F4397199C8C43006EBDDF /* record_focus_off.png in Resources */,
+				842A674B19A2E2FC005B3D7E /* vedio_nav_btn_back_pre@2x.png in Resources */,
 				846F43A1199C8C43006EBDDF /* record_lensflip_disable.png in Resources */,
+				842A675F19A2FB4D005B3D7E /* CaptureViewController.xib in Resources */,
+				842A675019A2E926005B3D7E /* video_icon.png in Resources */,
 				84152247199A05EF0013DB55 /* InfoPlist.strings in Resources */,
-				84526C15199B093C00E831FB /* CaptureViewController.xib in Resources */,
 				846F4384199C8C43006EBDDF /* g_tabbar_ic_video_nor@2x.png in Resources */,
 				846F4395199C8C43006EBDDF /* record_focus_normal.png in Resources */,
 				845FBDFD19A208B0004AD585 /* PlayViewController.xib in Resources */,
 				846F439C199C8C43006EBDDF /* record_icon_hook_normal_bg@2x.png in Resources */,
+				842A675219A2E926005B3D7E /* video_longvideo_btn_pause.png in Resources */,
 				846F4393199C8C43006EBDDF /* record_focus_highlighted.png in Resources */,
 				8415224F199A05EF0013DB55 /* Images.xcassets in Resources */,
 				846F4351199C63C1006EBDDF /* IMG_0970.PNG in Resources */,
@@ -543,6 +592,7 @@
 				846F4399199C8C43006EBDDF /* record_icon_hook_highlighted_bg.png in Resources */,
 				846F438E199C8C43006EBDDF /* record_delete_normal@2x.png in Resources */,
 				846F43A3199C8C43006EBDDF /* record_lensflip_highlighted.png in Resources */,
+				842A675119A2E926005B3D7E /* video_icon@2x.png in Resources */,
 				846F43A6199C8C43006EBDDF /* record_lensflip_normal@2x.png in Resources */,
 				846F43A7199C8C43006EBDDF /* record_progressbar_front.png in Resources */,
 				846F4352199C63C1006EBDDF /* IMG_0971.PNG in Resources */,
@@ -556,7 +606,10 @@
 				846F43AD199C8C43006EBDDF /* record_tool_normal.png in Resources */,
 				846F43AE199C8C43006EBDDF /* record_tool_normal@2x.png in Resources */,
 				846F4382199C8C43006EBDDF /* g_tabbar_ic_video_down@2x.png in Resources */,
+				842A674A19A2E2FC005B3D7E /* vedio_nav_btn_back_pre.png in Resources */,
 				846F438F199C8C43006EBDDF /* record_deletesure_normal.png in Resources */,
+				842A676B19A30898005B3D7E /* video_longvideo_btn_shoot.png in Resources */,
+				842A676C19A30898005B3D7E /* video_longvideo_btn_shoot@2x.png in Resources */,
 				846F439B199C8C43006EBDDF /* record_icon_hook_normal_bg.png in Resources */,
 				84526C1B199B094700E831FB /* MainViewController.xib in Resources */,
 				846F43A2199C8C43006EBDDF /* record_lensflip_disable@2x.png in Resources */,
@@ -578,13 +631,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				843C6B31199C56EB00AED0F0 /* DeleteButton.m in Sources */,
 				84526C87199B5FF000E831FB /* SBVideoRecorder.m in Sources */,
 				8415224D199A05EF0013DB55 /* AppDelegate.m in Sources */,
-				843C6B27199C53D100AED0F0 /* ProgressBar.m in Sources */,
+				842A675E19A2FB4D005B3D7E /* CaptureViewController.m in Sources */,
+				842A676019A2FB4D005B3D7E /* DeleteButton.m in Sources */,
+				842A676119A2FB4D005B3D7E /* ProgressBar.m in Sources */,
 				84152249199A05EF0013DB55 /* main.m in Sources */,
-				84526C14199B093C00E831FB /* CaptureViewController.m in Sources */,
 				84526C1A199B094700E831FB /* MainViewController.m in Sources */,
+				842A676819A3007A005B3D7E /* MBProgressHUD.m in Sources */,
 				845FBDFC19A208B0004AD585 /* PlayViewController.m in Sources */,
 				84526C7F199B516200E831FB /* SBCaptureToolKit.m in Sources */,
 			);

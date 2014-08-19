@@ -93,7 +93,7 @@
     }
     
     if (_totalVideoDur + _currentVideoDur >= MAX_VIDEO_DUR) {
-        [self stopRecording];
+        [self stopCurrentVideoRecording];
     }
 }
 
@@ -166,46 +166,17 @@
     exporter.outputFileType = AVFileTypeMPEG4;
     exporter.shouldOptimizeForNetworkUse = YES;
     [exporter exportAsynchronouslyWithCompletionHandler:^{
-        if ([_delegate respondsToSelector:@selector(videoRecorder:didFinishMergingVideosToOutPutFileAtURL:)]) {
-            [_delegate videoRecorder:self didFinishMergingVideosToOutPutFileAtURL:mergeFileURL];
-        }
-        NSLog(@"合成完成:%@", mergeFileURL);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([_delegate respondsToSelector:@selector(videoRecorder:didFinishMergingVideosToOutPutFileAtURL:)]) {
+                [_delegate videoRecorder:self didFinishMergingVideosToOutPutFileAtURL:mergeFileURL];
+            }
+        });
     }];
 }
 
-//- (void)mergeAndExportVideosAtFileURLs:(NSArray *)fileURLArray
-//{
-//    if ([fileURLArray count] < 2) {
-//        return;
-//    }
-//    
-//    AVAsset *firstAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:[fileURLArray objectAtIndex:0]]];
-//    AVAsset *secondAsset = [AVAsset assetWithURL:[NSURL fileURLWithPath:[fileURLArray objectAtIndex:1]]];
-//    
-//    //1 -
-//    AVMutableComposition *mixComposition = [[AVMutableComposition alloc] init];
-//    
-//    //2 -
-//    AVMutableCompositionTrack *firstVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
-//                                                                             preferredTrackID:kCMPersistentTrackID_Invalid];
-//    [firstVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, firstAsset.duration)
-//                             ofTrack:[[firstAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
-//                              atTime:kCMTimeZero
-//                               error:nil];
-//    
-//    
-//    AVMutableCompositionTrack *secondVideoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo
-//                                                                              preferredTrackID:kCMPersistentTrackID_Invalid];
-//    [secondVideoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, secondAsset.duration)
-//                              ofTrack:[[secondAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
-//                               atTime:firstAsset.duration
-//                                error:nil];
-//    
-//    //2.1 -
-//    AVMutableVideoCompositionInstruction *mainInstruciton = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-//}
-
 #pragma mark - Method
+
+
 - (void)mergeVideoFiles
 {
     NSMutableArray *fileURLArray = [[NSMutableArray alloc] init];
@@ -238,7 +209,18 @@
     [_movieFileOutput startRecordingToOutputFileURL:fileURL recordingDelegate:self];
 }
 
-- (void)stopRecording
+//初始化recorder之后不需要显式调用
+- (void)startSession
+{
+    [_captureSession startRunning];
+}
+
+- (void)stopSession
+{
+    [_captureSession stopRunning];
+}
+
+- (void)stopCurrentVideoRecording
 {
     [_movieFileOutput stopRecording];
 }

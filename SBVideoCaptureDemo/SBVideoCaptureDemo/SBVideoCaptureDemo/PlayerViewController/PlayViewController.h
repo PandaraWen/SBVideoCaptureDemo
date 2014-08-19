@@ -10,4 +10,6 @@
 
 @interface PlayViewController : UIViewController
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil withVideoFileURL:(NSURL *)videoFileURL;
+
 @end

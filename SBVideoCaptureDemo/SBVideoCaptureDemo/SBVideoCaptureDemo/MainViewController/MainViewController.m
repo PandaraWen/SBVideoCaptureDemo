@@ -11,6 +11,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "SBCaptureToolKit.h"
 #import <AVFoundation/AVFoundation.h>
+#import "PlayViewController.h"
 
 @interface MainViewController ()
 
@@ -42,26 +43,12 @@
 
 - (void)pressRecordButton:(UIButton *)sender
 {
-    NSURL *fileURL = [NSURL fileURLWithPath:[[SBCaptureToolKit getVideoSaveFolderPathString] stringByAppendingPathComponent:@"20140818173222merge.mp4"]];
-    NSLog(@"fileURL:%@", fileURL);
+    UINavigationController *navCon = [[UINavigationController alloc] init];
+    navCon.navigationBarHidden = YES;
     
-    AVAsset *movieAsset = [AVURLAsset URLAssetWithURL:fileURL options:nil];
-    AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:movieAsset];
-    AVPlayer *player = [AVPlayer playerWithPlayerItem:playerItem];
-    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
-    playerLayer.frame = CGRectMake(0, 0, 320, 320);
-    playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    
-    [self.view.layer addSublayer:playerLayer];
-    [player play];
-//    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-//    
-//    CaptureViewController *captureViewCon = [[CaptureViewController alloc] initWithNibName:@"CaptureViewController" bundle:nil];
-//    [self presentViewController:captureViewCon animated:YES completion:nil];
-//    
-//    if (DEVICE_OS_VERSION < 7.0f) {
-//        [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-//    }
+    CaptureViewController *captureViewCon = [[CaptureViewController alloc] initWithNibName:@"CaptureViewController" bundle:nil];
+    [navCon pushViewController:captureViewCon animated:NO];
+    [self presentViewController:navCon animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning
