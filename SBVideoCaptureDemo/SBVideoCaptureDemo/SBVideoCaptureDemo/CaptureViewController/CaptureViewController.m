@@ -37,6 +37,7 @@
 @property (strong, nonatomic) UIButton *switchButton;
 @property (strong, nonatomic) UIButton *settingButton;
 @property (strong, nonatomic) UIButton *recordButton;
+@property (strong, nonatomic) UIButton *flashButton;
 
 @property (strong, nonatomic) MBProgressHUD *hud;
 
@@ -176,12 +177,20 @@
     [self.view insertSubview:_switchButton belowSubview:_maskView];
     
     //setting
-    self.settingButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10), 5, buttonW, buttonW)];
-    [_settingButton setImage:[UIImage imageNamed:@"record_tool_normal.png"] forState:UIControlStateNormal];
-    [_settingButton setImage:[UIImage imageNamed:@"record_tool_disable.png"] forState:UIControlStateDisabled];
-    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateSelected];
-    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateHighlighted];
-    [self.view insertSubview:_settingButton belowSubview:_maskView];
+//    self.settingButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10), 5, buttonW, buttonW)];
+//    [_settingButton setImage:[UIImage imageNamed:@"record_tool_normal.png"] forState:UIControlStateNormal];
+//    [_settingButton setImage:[UIImage imageNamed:@"record_tool_disable.png"] forState:UIControlStateDisabled];
+//    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateSelected];
+//    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateHighlighted];
+//    [self.view insertSubview:_settingButton belowSubview:_maskView];
+    self.flashButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10), 5, buttonW, buttonW)];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_normal.png"] forState:UIControlStateNormal];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_disable.png"] forState:UIControlStateDisabled];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateHighlighted];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateSelected];
+    _flashButton.enabled = _recorder.isTorchSupported;
+    [_flashButton addTarget:self action:@selector(pressFlashButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:_flashButton belowSubview:_maskView];
 }
 
 - (void)pressCloseButton
@@ -197,13 +206,24 @@
 
 - (void)pressSwitchButton
 {
-    [_recorder switchCamera];
     _switchButton.selected = !_switchButton.selected;
+    if (_switchButton.selected) {//换成前摄像头
+        if (_flashButton.selected) {
+            [_recorder openTorch:NO];
+            _flashButton.selected = NO;
+            _flashButton.enabled = NO;
+        }
+    } else {
+        _flashButton.enabled = [_recorder isFrontCameraSupported];
+    }
+    
+    [_recorder switchCamera];
 }
 
-- (void)pressSettingButton
+- (void)pressFlashButton
 {
-    
+    _flashButton.selected = !_flashButton.selected;
+    [_recorder openTorch:_flashButton.selected];
 }
 
 - (void)pressDeleteButton

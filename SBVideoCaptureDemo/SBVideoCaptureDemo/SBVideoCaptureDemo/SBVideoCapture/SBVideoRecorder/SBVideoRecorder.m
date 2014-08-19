@@ -34,6 +34,8 @@
 
 @property (assign, nonatomic) BOOL isFrontCameraSupported;
 @property (assign, nonatomic) BOOL isCameraSupported;
+@property (assign, nonatomic) BOOL isTorchSupported;
+@property (assign, nonatomic) BOOL isTorchOn;
 @property (assign, nonatomic) BOOL isUsingFrontCamera;
 
 @property (strong, nonatomic) AVCaptureDeviceInput *videoDeviceInput;
@@ -83,6 +85,12 @@
         return;
     } else {
         self.isCameraSupported = YES;
+        
+        if ([backCamera hasTorch]) {
+            self.isTorchSupported = YES;
+        } else {
+            self.isTorchSupported = NO;
+        }
     }
     
     if (!frontCamera) {
@@ -250,10 +258,34 @@
 }
 
 #pragma mark - Method
+- (void)openTorch:(BOOL)open
+{
+    self.isTorchOn = open;
+    if (!_isTorchSupported) {
+        return;
+    }
+    
+    AVCaptureTorchMode torchMode;
+    if (open) {
+        torchMode = AVCaptureTorchModeOn;
+    } else {
+        torchMode = AVCaptureTorchModeOff;
+    }
+    
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    [device lockForConfiguration:nil];
+    [device setTorchMode:torchMode];
+    [device unlockForConfiguration];
+}
+
 - (void)switchCamera
 {
     if (!_isFrontCameraSupported || !_isCameraSupported || !_videoDeviceInput) {
         return;
+    }
+    
+    if (_isTorchOn) {
+        [self openTorch:NO];
     }
     
     [_captureSession beginConfiguration];
@@ -265,6 +297,11 @@
     self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:device error:nil];
     [_captureSession addInput:_videoDeviceInput];
     [_captureSession commitConfiguration];
+}
+
+- (BOOL)isTorchSupported
+{
+    return _isTorchSupported;
 }
 
 - (BOOL)isFrontCameraSupported

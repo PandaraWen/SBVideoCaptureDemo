@@ -42,7 +42,9 @@
 
 - (BOOL)isCameraSupported;
 - (BOOL)isFrontCameraSupported;
+- (BOOL)isTorchSupported;
 
 - (void)switchCamera;
+- (void)openTorch:(BOOL)open;
 
 @end
