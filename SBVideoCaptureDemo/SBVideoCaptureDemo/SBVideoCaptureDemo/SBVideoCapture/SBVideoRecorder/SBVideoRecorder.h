@@ -47,4 +47,6 @@
 - (void)switchCamera;
 - (void)openTorch:(BOOL)open;
 
+- (void)focusInPoint:(CGPoint)touchPoint;
+
 @end
