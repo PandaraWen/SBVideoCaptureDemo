@@ -21,7 +21,7 @@
 
 @end
 
-#define COUNT_DUR_TIMER_INTERVAL 0.01
+#define COUNT_DUR_TIMER_INTERVAL 0.05
 
 @interface SBVideoRecorder ()
 
