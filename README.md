@@ -40,5 +40,5 @@ MediaPlayer.framework(if "PlayVeiwController is needed"), QuartzCore.framework, 
 
 This code is distributed under the terms and conditions of the [MIT license](LICENSE).
 
-[1]: http://hte4mj-resource.stor.sinaapp.com/SBVideoCapture/IMG_1030.PNG
-[2]: http://hte4mj-resource.stor.sinaapp.com/SBVideoCapture/IMG_1031.PNG
+[1]: http://hte4mj-resource.stor.sinaapp.com/SBVideoCapture/1.PNG
+[2]: http://hte4mj-resource.stor.sinaapp.com/SBVideoCapture/2.PNG
