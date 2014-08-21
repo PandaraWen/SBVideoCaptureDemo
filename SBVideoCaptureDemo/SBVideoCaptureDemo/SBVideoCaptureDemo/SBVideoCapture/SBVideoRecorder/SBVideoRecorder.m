@@ -152,6 +152,16 @@
 //必须是fileURL
 //截取将会是视频的中间部分
 //这里假设拍摄出来的视频总是高大于宽的
+
+/*!
+ @method mergeAndExportVideosAtFileURLs:
+ 
+ @param fileURLArray
+ 包含所有视频分段的文件URL数组，必须是[NSURL fileURLWithString:...]得到的
+ 
+ @discussion
+ 将所有分段视频合成为一段完整视频，并且裁剪为正方形
+ */
 - (void)mergeAndExportVideosAtFileURLs:(NSArray *)fileURLArray
 {
     NSError *error = nil;
@@ -281,7 +291,7 @@
     } else {
         CGRect cleanAperture;
         
-        for(AVCaptureInputPort *port in [self.videoDeviceInput ports]) {//需要按照项目实际情况修改，必须是videoInput
+        for(AVCaptureInputPort *port in [self.videoDeviceInput ports]) {//需要按照项目实际情况修改，必须是正在使用的videoInput
             if([port mediaType] == AVMediaTypeVideo) {
                 cleanAperture = CMVideoFormatDescriptionGetCleanAperture([port formatDescription], YES);
                 CGSize apertureSize = cleanAperture.size;
