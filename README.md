@@ -15,16 +15,16 @@ A custom UI video recording demo with AVFoundation.framework, recording multiple
 
 Usage:
 ----------
-0. Import 4 framework
+1. Import 4 framework
 ```
 MediaPlayer.framework(if "PlayVeiwController is needed"), QuartzCore.framework, AVFoundation.framework, CoreGraphics.framework;
 ```
 
-1. Drag "SBVideoCapture" folder to your project;
+2. Drag "SBVideoCapture" folder to your project;
 
-2. import the head file, and initalize the class SBVideoRecorder
+3. import the head file, and initalize the class SBVideoRecorder
 
-```object-c
+```Object-C
 - (void)initRecorder
 {
     self.recorder = [[SBVideoRecorder alloc] init];
