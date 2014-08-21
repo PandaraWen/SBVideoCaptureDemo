@@ -103,6 +103,7 @@
     if ([backCamera isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
         [backCamera setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
     }
+
     [backCamera unlockForConfiguration];
     
     self.videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:backCamera error:nil];
@@ -189,6 +190,12 @@
         AVAsset *asset = [assetArray objectAtIndex:i];
         AVAssetTrack *assetTrack = [assetTrackArray objectAtIndex:i];
         
+        AVMutableCompositionTrack *audioTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
+        [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration)
+                            ofTrack:[[asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0]
+                             atTime:totalDuration
+                              error:nil];
+        
         AVMutableCompositionTrack *videoTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
         
         [videoTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration)
@@ -267,13 +274,14 @@
     CGPoint pointOfInterest = CGPointMake(.5f, .5f);
     CGSize frameSize = _preViewLayer.bounds.size;
     
-    AVCaptureVideoPreviewLayer *videoPreviewLayer = self.preViewLayer;
+    AVCaptureVideoPreviewLayer *videoPreviewLayer = self.preViewLayer;//需要按照项目实际情况修改
     
     if([[videoPreviewLayer videoGravity]isEqualToString:AVLayerVideoGravityResize]) {
         pointOfInterest = CGPointMake(viewCoordinates.y / frameSize.height, 1.f - (viewCoordinates.x / frameSize.width));
     } else {
         CGRect cleanAperture;
-        for(AVCaptureInputPort *port in [[self.captureSession.inputs lastObject]ports]) {
+        
+        for(AVCaptureInputPort *port in [self.videoDeviceInput ports]) {//需要按照项目实际情况修改，必须是videoInput
             if([port mediaType] == AVMediaTypeVideo) {
                 cleanAperture = CMVideoFormatDescriptionGetCleanAperture([port formatDescription], YES);
                 CGSize apertureSize = cleanAperture.size;

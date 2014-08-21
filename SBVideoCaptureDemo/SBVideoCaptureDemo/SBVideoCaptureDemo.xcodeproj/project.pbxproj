@@ -99,6 +99,8 @@
 		846F43AC199C8C43006EBDDF /* record_tool_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846F437E199C8C43006EBDDF /* record_tool_highlighted@2x.png */; };
 		846F43AD199C8C43006EBDDF /* record_tool_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 846F437F199C8C43006EBDDF /* record_tool_normal.png */; };
 		846F43AE199C8C43006EBDDF /* record_tool_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 846F4380199C8C43006EBDDF /* record_tool_normal@2x.png */; };
+		847F42E519A45E2900169338 /* touch_focus_not.png in Resources */ = {isa = PBXBuildFile; fileRef = 847F42E319A45E2900169338 /* touch_focus_not.png */; };
+		847F42E619A45E2900169338 /* touch_focus_not@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 847F42E419A45E2900169338 /* touch_focus_not@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,6 +220,8 @@
 		846F437E199C8C43006EBDDF /* record_tool_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "record_tool_highlighted@2x.png"; sourceTree = "<group>"; };
 		846F437F199C8C43006EBDDF /* record_tool_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = record_tool_normal.png; sourceTree = "<group>"; };
 		846F4380199C8C43006EBDDF /* record_tool_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "record_tool_normal@2x.png"; sourceTree = "<group>"; };
+		847F42E319A45E2900169338 /* touch_focus_not.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = touch_focus_not.png; sourceTree = "<group>"; };
+		847F42E419A45E2900169338 /* touch_focus_not@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "touch_focus_not@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -391,6 +395,8 @@
 		84526C26199B183900E831FB /* image */ = {
 			isa = PBXGroup;
 			children = (
+				847F42E319A45E2900169338 /* touch_focus_not.png */,
+				847F42E419A45E2900169338 /* touch_focus_not@2x.png */,
 				842A677E19A351F9005B3D7E /* record_flashlight_normal.png */,
 				842A677F19A351F9005B3D7E /* record_flashlight_normal@2x.png */,
 				842A677619A351C1005B3D7E /* record_flashlight_disable.png */,
@@ -566,6 +572,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				847F42E519A45E2900169338 /* touch_focus_not.png in Resources */,
 				846F4388199C8C43006EBDDF /* record_close_highlighted@2x.png in Resources */,
 				846F439D199C8C43006EBDDF /* record_icon_hook_normal.png in Resources */,
 				846F438A199C8C43006EBDDF /* record_close_normal@2x.png in Resources */,
@@ -577,6 +584,7 @@
 				846F439A199C8C43006EBDDF /* record_icon_hook_highlighted_bg@2x.png in Resources */,
 				842A675319A2E926005B3D7E /* video_longvideo_btn_pause@2x.png in Resources */,
 				846F43AB199C8C43006EBDDF /* record_tool_highlighted.png in Resources */,
+				847F42E619A45E2900169338 /* touch_focus_not@2x.png in Resources */,
 				846F4386199C8C43006EBDDF /* record_close_disable@2x.png in Resources */,
 				842A674919A2E2FC005B3D7E /* vedio_nav_btn_back_nor@2x.png in Resources */,
 				846F4390199C8C43006EBDDF /* record_deletesure_normal@2x.png in Resources */,

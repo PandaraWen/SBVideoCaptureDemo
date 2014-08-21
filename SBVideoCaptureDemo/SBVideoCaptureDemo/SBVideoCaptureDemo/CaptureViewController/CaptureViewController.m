@@ -44,6 +44,9 @@
 @property (assign, nonatomic) BOOL initalized;
 @property (assign, nonatomic) BOOL isProcessingData;
 
+@property (strong, nonatomic) UIView *preview;
+@property (strong, nonatomic) UIImageView *focusRectView;
+
 @end
 
 @implementation CaptureViewController
@@ -74,6 +77,7 @@
         return;
     }
     
+    [self initPreview];
     [self initRecorder];
     [SBCaptureToolKit createVideoFolderIfNotExist];
     [self initProgressBar];
@@ -87,12 +91,19 @@
     self.initalized = YES;
 }
 
+- (void)initPreview
+{
+    self.preview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_SIZE.width, DEVICE_SIZE.width)];
+    _preview.clipsToBounds = YES;
+    [self.view insertSubview:_preview belowSubview:_maskView];
+}
+
 - (void)initRecorder
 {
     self.recorder = [[SBVideoRecorder alloc] init];
     _recorder.delegate = self;
     _recorder.preViewLayer.frame = CGRectMake(0, 0, DEVICE_SIZE.width, DEVICE_SIZE.width);
-    [self.view.layer insertSublayer:_recorder.preViewLayer atIndex:0];
+    [self.preview.layer addSublayer:_recorder.preViewLayer];
 }
 
 - (void)initProgressBar
@@ -191,6 +202,12 @@
     _flashButton.enabled = _recorder.isTorchSupported;
     [_flashButton addTarget:self action:@selector(pressFlashButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:_flashButton belowSubview:_maskView];
+    
+    //focus rect view
+    self.focusRectView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 90, 90)];
+    _focusRectView.image = [UIImage imageNamed:@"touch_focus_not.png"];
+    _focusRectView.alpha = 0;
+    [self.preview addSubview:_focusRectView];
 }
 
 - (void)pressCloseButton
@@ -211,6 +228,8 @@
         if (_flashButton.selected) {
             [_recorder openTorch:NO];
             _flashButton.selected = NO;
+            _flashButton.enabled = NO;
+        } else {
             _flashButton.enabled = NO;
         }
     } else {
@@ -312,6 +331,36 @@
     return YES;
 }
 
+- (void)showFocusRectAtPoint:(CGPoint)point
+{
+    _focusRectView.alpha = 1.0f;
+    _focusRectView.center = point;
+    _focusRectView.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
+    [UIView animateWithDuration:0.2f animations:^{
+        _focusRectView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+    } completion:^(BOOL finished) {
+        CAKeyframeAnimation *animation = [CAKeyframeAnimation animation];
+        animation.values = @[@0.5f, @1.0f, @0.5f, @1.0f, @0.5f, @1.0f];
+        animation.duration = 0.5f;
+        [_focusRectView.layer addAnimation:animation forKey:@"opacity"];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:0.3f animations:^{
+                _focusRectView.alpha = 0;
+            }];
+        });
+    }];
+//    _focusRectView.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
+//    _focusRectView.center = point;
+//    [UIView animateWithDuration:0.3f animations:^{
+//        _focusRectView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
+//        _focusRectView.alpha = 1.0f;
+//    } completion:^(BOOL finished) {
+//        [UIView animateWithDuration:0.1f animations:^{
+//            _focusRectView.alpha = 0.0f;
+//        }];
+//    }];
+}
 
 
 //- (void)startProgressTimer
@@ -405,10 +454,17 @@
     }
     
     UITouch *touch = [touches anyObject];
+    
     CGPoint touchPoint = [touch locationInView:_recordButton.superview];
     if (CGRectContainsPoint(_recordButton.frame, touchPoint)) {
         NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
         [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+    }
+    
+    touchPoint = [touch locationInView:self.view];//previewLayer 的 superLayer所在的view
+    if (CGRectContainsPoint(_recorder.preViewLayer.frame, touchPoint)) {
+        [self showFocusRectAtPoint:touchPoint];
+        [_recorder focusInPoint:touchPoint];
     }
 }
 
