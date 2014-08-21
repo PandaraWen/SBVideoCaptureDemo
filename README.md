@@ -24,7 +24,7 @@ MediaPlayer.framework(if "PlayVeiwController is needed"), QuartzCore.framework, 
 
 3. import the head file, and initalize the class SBVideoRecorder
 
-```Object-C
+```Objective-C
 - (void)initRecorder
 {
     self.recorder = [[SBVideoRecorder alloc] init];
