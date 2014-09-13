@@ -10,6 +10,9 @@
 #import "SBCaptureDefine.h"
 #import "SBCaptureToolKit.h"
 
+// Fix some issues under iOS 5.x by Johnny Xu
+#define iOS5 ((([[UIDevice currentDevice].systemVersion intValue] >= 5) && ([[UIDevice currentDevice].systemVersion intValue] < 6)) ? YES : NO )
+
 @interface SBVideoData: NSObject
 
 @property (assign, nonatomic) CGFloat duration;
@@ -247,14 +250,37 @@
     AVAssetExportSession *exporter = [[AVAssetExportSession alloc] initWithAsset:mixComposition presetName:AVAssetExportPresetMediumQuality];
     exporter.videoComposition = mainCompositionInst;
     exporter.outputURL = mergeFileURL;
-    exporter.outputFileType = AVFileTypeMPEG4;
     exporter.shouldOptimizeForNetworkUse = YES;
+    // Fix iOS 5.x crash issue by Johnny Xu.
+    if (iOS5)
+    {
+        exporter.outputFileType = AVFileTypeQuickTimeMovie;
+    }
+    else
+    {
+        exporter.outputFileType = AVFileTypeMPEG4;
+    }
+   
     [exporter exportAsynchronouslyWithCompletionHandler:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([_delegate respondsToSelector:@selector(videoRecorder:didFinishMergingVideosToOutPutFileAtURL:)]) {
-                [_delegate videoRecorder:self didFinishMergingVideosToOutPutFileAtURL:mergeFileURL];
+        // Fix can't export issue under iOS 5.x by Johnny Xu.
+        switch ([exporter status])
+        {
+            case AVAssetExportSessionStatusCompleted:
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([_delegate respondsToSelector:@selector(videoRecorder:didFinishMergingVideosToOutPutFileAtURL:)])
+                    {
+                        [_delegate videoRecorder:self didFinishMergingVideosToOutPutFileAtURL:mergeFileURL];
+                    }
+                    
+                     NSLog(@"export video success.");
+                });
             }
-        });
+            case AVAssetExportSessionStatusFailed:
+            {
+                NSLog(@"export video failed.");
+            }
+        }
     }];
 }
 
