@@ -19,6 +19,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #define TIMER_INTERVAL 0.05f
+#define KPREVIEWTOTOPHEIGHT 44
 
 #define TAG_ALERTVIEW_CLOSE_CONTROLLER 10086
 
@@ -93,7 +94,7 @@
 
 - (void)initPreview
 {
-    self.preview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_SIZE.width, DEVICE_SIZE.width)];
+    self.preview = [[UIView alloc] initWithFrame:CGRectMake(0, KPREVIEWTOTOPHEIGHT, DEVICE_SIZE.width, DEVICE_SIZE.width)];
     _preview.clipsToBounds = YES;
     [self.view insertSubview:_preview belowSubview:_maskView];
 }
@@ -109,7 +110,7 @@
 - (void)initProgressBar
 {
     self.progressBar = [ProgressBar getInstance];
-    [SBCaptureToolKit setView:_progressBar toOriginY:DEVICE_SIZE.width];
+    [SBCaptureToolKit setView:_progressBar toOriginY:DEVICE_SIZE.width + KPREVIEWTOTOPHEIGHT];
     [self.view insertSubview:_progressBar belowSubview:_maskView];
     [_progressBar startShining];
 }
@@ -177,8 +178,17 @@
     [_closeButton addTarget:self action:@selector(pressCloseButton) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:_closeButton belowSubview:_maskView];
     
+    self.flashButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10) * 2 - 10, 5, buttonW, buttonW)];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_normal.png"] forState:UIControlStateNormal];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_disable.png"] forState:UIControlStateDisabled];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateHighlighted];
+    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateSelected];
+    _flashButton.enabled = _recorder.isTorchSupported;
+    [_flashButton addTarget:self action:@selector(pressFlashButton) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:_flashButton belowSubview:_maskView];
+    
     //前后摄像头转换
-    self.switchButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10) * 2 - 10, 5, buttonW, buttonW)];
+    self.switchButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10), 5, buttonW, buttonW)];
     [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_normal.png"] forState:UIControlStateNormal];
     [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_disable.png"] forState:UIControlStateDisabled];
     [_switchButton setImage:[UIImage imageNamed:@"record_lensflip_highlighted.png"] forState:UIControlStateSelected];
@@ -194,14 +204,6 @@
 //    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateSelected];
 //    [_settingButton setImage:[UIImage imageNamed:@"record_tool_highlighted.png"] forState:UIControlStateHighlighted];
 //    [self.view insertSubview:_settingButton belowSubview:_maskView];
-    self.flashButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - (buttonW + 10), 5, buttonW, buttonW)];
-    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_normal.png"] forState:UIControlStateNormal];
-    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_disable.png"] forState:UIControlStateDisabled];
-    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateHighlighted];
-    [_flashButton setImage:[UIImage imageNamed:@"record_flashlight_highlighted.png"] forState:UIControlStateSelected];
-    _flashButton.enabled = _recorder.isTorchSupported;
-    [_flashButton addTarget:self action:@selector(pressFlashButton) forControlEvents:UIControlEventTouchUpInside];
-    [self.view insertSubview:_flashButton belowSubview:_maskView];
     
     //focus rect view
     self.focusRectView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 90, 90)];
@@ -213,7 +215,7 @@
 - (void)pressCloseButton
 {
     if ([_recorder getVideoCount] > 0) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提醒" message:@"放弃这个视频真的好么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"放弃", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:NSLocalizedString(@"确定放弃这段视频吗？", nil)  delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil)  otherButtonTitles:NSLocalizedString(@"确定", nil), nil];
         alertView.tag = TAG_ALERTVIEW_CLOSE_CONTROLLER;
         [alertView show];
     } else {
@@ -296,26 +298,15 @@
 
 - (void)hideMaskView
 {
-    [UIView animateWithDuration:0.5f animations:^{
-        CGRect frame = self.maskView.frame;
-        frame.origin.y = self.maskView.frame.size.height;
-        self.maskView.frame = frame;
-    }];
+    CGRect frame = self.maskView.frame;
+    frame.origin.y = self.maskView.frame.size.height;
+    self.maskView.frame = frame;
 }
 
 - (UIView *)getMaskView
 {
     UIView *maskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, DEVICE_SIZE.width, DEVICE_SIZE.height + DELTA_Y)];
     maskView.backgroundColor = color(30, 30, 30, 1);
-    
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, DEVICE_SIZE.width, DEVICE_SIZE.height)];
-    label.font = [UIFont systemFontOfSize:50.0f];
-    label.textColor = color(100, 100, 100, 1);
-    label.textAlignment = NSTextAlignmentCenter;
-    label.text = @"S B";
-    label.backgroundColor = [UIColor clearColor];
-    
-    [maskView addSubview:label];
     
     return maskView;
 }

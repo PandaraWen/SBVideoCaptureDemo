@@ -10,10 +10,11 @@
 #import "SBCaptureToolKit.h"
 #import "SBCaptureToolKit.h"
 
-#define BAR_H 18
+#define BAR_H 6
 #define BAR_MARGIN 2
 
 #define BAR_BLUE_COLOR color(68, 214, 254, 1)
+#define BAR_RHKEY_COLOR color(243,87,60,1)
 #define BAR_RED_COLOR color(224, 66, 39, 1)
 #define BAR_BG_COLOR color(38, 38, 38, 1)
 
@@ -21,8 +22,8 @@
 
 #define BG_COLOR color(11, 11, 11, 1)
 
-#define INDICATOR_W 16
-#define INDICATOR_H 22
+#define INDICATOR_W 4
+#define INDICATOR_H 10
 
 #define TIMER_INTERVAL 1.0f
 
@@ -75,7 +76,7 @@
 - (UIView *)getProgressView
 {
     UIView *progressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, BAR_H)];
-    progressView.backgroundColor = BAR_BLUE_COLOR;
+    progressView.backgroundColor = BAR_RHKEY_COLOR;
     progressView.autoresizesSubviews = YES;
     
     return progressView;
@@ -164,7 +165,7 @@
             break;
         case ProgressBarProgressStyleNormal:
         {
-            lastProgressView.backgroundColor = BAR_BLUE_COLOR;
+            lastProgressView.backgroundColor = BAR_RHKEY_COLOR;
             _progressIndicator.hidden = NO;
         }
             break;
