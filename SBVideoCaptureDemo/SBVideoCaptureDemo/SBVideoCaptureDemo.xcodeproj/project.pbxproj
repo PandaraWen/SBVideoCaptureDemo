@@ -541,9 +541,6 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Pandara;
 				TargetAttributes = {
-					84152238199A05EF0013DB55 = {
-						DevelopmentTeam = 77BG5776U4;
-					};
 					84152253199A05EF0013DB55 = {
 						TestTargetID = 84152238199A05EF0013DB55;
 					};
@@ -791,13 +788,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: lei yong (K974H54X57)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SBVideoCaptureDemo/SBVideoCaptureDemo-Prefix.pch";
 				INFOPLIST_FILE = "SBVideoCaptureDemo/SBVideoCaptureDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "42fd4dc8-435b-4ae0-a4c2-8d9b3879e29d";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -808,13 +805,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: lei yong (K974H54X57)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SBVideoCaptureDemo/SBVideoCaptureDemo-Prefix.pch";
 				INFOPLIST_FILE = "SBVideoCaptureDemo/SBVideoCaptureDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "42fd4dc8-435b-4ae0-a4c2-8d9b3879e29d";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

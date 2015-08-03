@@ -10,29 +10,29 @@
 	<string>SBVideoCaptureDemo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2C115BAC-631A-4EB7-A499-90AAFDA8986E</key>
-		<string>https://github.com/PandaraWen/SBVideoCaptureDemo.git</string>
+		<key>19391125B824492C6C146D5D0B556F6F67C38AAD</key>
+		<string>https://github.com/ReHuApp/SBVideoCaptureDemo.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>SBVideoCaptureDemo/SBVideoCaptureDemo/SBVideoCaptureDemo.xcodeproj/project.xcworkspace</string>
+	<string>SBVideoCaptureDemo/SBVideoCaptureDemo/SBVideoCaptureDemo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2C115BAC-631A-4EB7-A499-90AAFDA8986E</key>
+		<key>19391125B824492C6C146D5D0B556F6F67C38AAD</key>
 		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/PandaraWen/SBVideoCaptureDemo.git</string>
+	<string>https://github.com/ReHuApp/SBVideoCaptureDemo.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2C115BAC-631A-4EB7-A499-90AAFDA8986E</string>
+	<string>19391125B824492C6C146D5D0B556F6F67C38AAD</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2C115BAC-631A-4EB7-A499-90AAFDA8986E</string>
+			<string>19391125B824492C6C146D5D0B556F6F67C38AAD</string>
 			<key>IDESourceControlWCCName</key>
 			<string>SBVideoCaptureDemo</string>
 		</dict>
