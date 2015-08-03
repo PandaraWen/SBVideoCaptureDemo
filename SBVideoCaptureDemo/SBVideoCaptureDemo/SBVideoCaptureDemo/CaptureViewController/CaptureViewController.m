@@ -137,7 +137,7 @@
 - (void)initRecordButton
 {
     CGFloat buttonW = 80.0f;
-    self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_SIZE.width - buttonW) / 2.0, _progressBar.frame.origin.y + _progressBar.frame.size.height + 10, buttonW, buttonW)];
+    self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_SIZE.width - buttonW) / 2.0, _progressBar.frame.origin.y + _progressBar.frame.size.height + 50, buttonW, buttonW)];
     [_recordButton setImage:[UIImage imageNamed:@"video_longvideo_btn_shoot.png"] forState:UIControlStateNormal];
     _recordButton.userInteractionEnabled = NO;
     [self.view insertSubview:_recordButton belowSubview:_maskView];
