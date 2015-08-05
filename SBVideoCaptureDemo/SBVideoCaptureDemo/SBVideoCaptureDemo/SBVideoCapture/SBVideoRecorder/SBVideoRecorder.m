@@ -203,7 +203,7 @@
             
             AVMutableCompositionTrack *audioTrack = [mixComposition addMutableTrackWithMediaType:AVMediaTypeAudio preferredTrackID:kCMPersistentTrackID_Invalid];
             [audioTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, asset.duration)
-                                ofTrack:[[asset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0]
+                                ofTrack:[[asset tracksWithMediaType:AVMediaTypeAudio] firstObject]
                                  atTime:totalDuration
                                   error:nil];
             
