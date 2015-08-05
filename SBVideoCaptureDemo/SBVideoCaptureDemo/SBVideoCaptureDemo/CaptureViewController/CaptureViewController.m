@@ -290,7 +290,7 @@
     
     if (!self.hud) {
         self.hud = [[MBProgressHUD alloc] initWithView:self.view];
-        _hud.labelText = @"努力处理中";
+        _hud.labelText = NSLocalizedString(@"视频生成中", nil);
     }
     [_hud show:YES];
     [self.view addSubview:_hud];

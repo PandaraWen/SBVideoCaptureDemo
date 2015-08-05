@@ -57,7 +57,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "447"
             endingLineNumber = "447"
-            landmarkName = "-videoRecorder:didFinishMergingVideosToOutPutFileAtURL:error:"
+            landmarkName = "-videoRecorder:didFinishMergingVideosToOutPutFileAtURL:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
