@@ -13,6 +13,7 @@
 @interface PlayViewController ()
 
 @property (strong, nonatomic) UIButton *backButton;
+@property (strong, nonatomic) UILabel *titleLabel;
 @property (strong, nonatomic) NSURL *videoFileURL;
 @property (strong, nonatomic) AVPlayer *player;
 @property (strong, nonatomic) AVPlayerLayer *playerLayer;
@@ -42,6 +43,13 @@
     [_backButton setImage:[UIImage imageNamed:@"vedio_nav_btn_back_pre.png"] forState:UIControlStateHighlighted];
     [_backButton addTarget:self action:@selector(pressBackButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.backButton];
+    
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((DEVICE_SIZE.width - 60) / 2, 0, 60, 44)];
+    self.titleLabel.text = NSLocalizedString(@"视频", nil);
+    [self.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.titleLabel setTextColor:[UIColor whiteColor]];
+    
+    [self.view addSubview:self.titleLabel];
     
     [self initPlayLayer];
     
@@ -76,7 +84,7 @@
     self.playerItem = [AVPlayerItem playerItemWithAsset:movieAsset];
     self.player = [AVPlayer playerWithPlayerItem:_playerItem];
     self.playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
-    _playerLayer.frame = CGRectMake(0, 44, DEVICE_SIZE.width, DEVICE_SIZE.width);
+    _playerLayer.frame = CGRectMake(0, (DEVICE_SIZE.height - DEVICE_SIZE.width) / 2, DEVICE_SIZE.width, DEVICE_SIZE.width);
     _playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
     [self.view.layer addSublayer:_playerLayer];
 
