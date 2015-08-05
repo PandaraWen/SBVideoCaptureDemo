@@ -384,8 +384,6 @@
     [self focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeContinuousAutoExposure atDevicePoint:devicePoint monitorSubjectAreaChange:YES];
 }
 
-
-
 - (void)openTorch:(BOOL)open
 {
     self.isTorchOn = open;

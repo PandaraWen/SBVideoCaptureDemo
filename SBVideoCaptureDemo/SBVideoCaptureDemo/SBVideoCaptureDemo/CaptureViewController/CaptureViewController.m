@@ -139,8 +139,12 @@
     CGFloat buttonW = 80.0f;
     self.recordButton = [[UIButton alloc] initWithFrame:CGRectMake((DEVICE_SIZE.width - buttonW) / 2.0, _progressBar.frame.origin.y + _progressBar.frame.size.height + 50, buttonW, buttonW)];
     [_recordButton setImage:[UIImage imageNamed:@"video_longvideo_btn_shoot.png"] forState:UIControlStateNormal];
-    _recordButton.userInteractionEnabled = NO;
+//    _recordButton.userInteractionEnabled = NO;
     [self.view insertSubview:_recordButton belowSubview:_maskView];
+    
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(processGestureRecognizer:)];
+    longPress.minimumPressDuration = 0.2f;
+    [_recordButton addGestureRecognizer:longPress];
 }
 
 - (void)initOKButton
@@ -264,6 +268,20 @@
     }
 }
 
+- (void)processGestureRecognizer:(UIGestureRecognizer *)gesture
+{
+    if ([gesture isKindOfClass:[UILongPressGestureRecognizer class]])
+    {
+        UILongPressGestureRecognizer *longPress = (UILongPressGestureRecognizer *)gesture;
+        if (longPress.state == UIGestureRecognizerStateBegan) {
+            NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
+            [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+        }else if (longPress.state == UIGestureRecognizerStateEnded) {
+            [_recorder stopCurrentVideoRecording];
+        }
+    }
+}
+
 - (void)pressOKButton
 {
     if (_isProcessingData) {
@@ -341,7 +359,7 @@
             }];
         });
     }];
-//    _focusRectView.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
+//    _focusRectView.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
 //    _focusRectView.center = point;
 //    [UIView animateWithDuration:0.3f animations:^{
 //        _focusRectView.transform = CGAffineTransformMakeScale(1.0f, 1.0f);
@@ -447,10 +465,10 @@
     UITouch *touch = [touches anyObject];
     
     CGPoint touchPoint = [touch locationInView:_recordButton.superview];
-    if (CGRectContainsPoint(_recordButton.frame, touchPoint)) {
-        NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
-        [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
-    }
+//    if (CGRectContainsPoint(_recordButton.frame, touchPoint)) {
+//        NSString *filePath = [SBCaptureToolKit getVideoSaveFilePathString];
+//        [_recorder startRecordingToOutputFileURL:[NSURL fileURLWithPath:filePath]];
+//    }
     
     touchPoint = [touch locationInView:self.view];//previewLayer 的 superLayer所在的view
     if (CGRectContainsPoint(_recorder.preViewLayer.frame, touchPoint)) {
@@ -465,7 +483,7 @@
         return;
     }
     
-    [_recorder stopCurrentVideoRecording];
+//    [_recorder stopCurrentVideoRecording];
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -518,6 +536,7 @@
 {
 	return UIInterfaceOrientationPortrait;
 }
+
 #endif
 
 
