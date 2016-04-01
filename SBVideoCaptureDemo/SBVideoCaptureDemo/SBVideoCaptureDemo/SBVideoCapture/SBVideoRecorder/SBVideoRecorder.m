@@ -5,6 +5,7 @@
 //  Created by Pandara on 14-8-13.
 //  Copyright (c) 2014年 Pandara. All rights reserved.
 //
+//  some test
 
 #import "SBVideoRecorder.h"
 #import "SBCaptureDefine.h"
